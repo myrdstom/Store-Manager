@@ -110,6 +110,22 @@ class DBHandler:
                          (username, product_name, unit_price, stock))
 
 
+    def modify_products(self, data, product_id):
+        self.cur.execute(
+            "UPDATE products SET product_name=%s, unit_price=%s, stock=%s WHERE product_id=%s",
+            (data['product_name'], data['unit_price'], data['stock'], product_id))
+        self.cur.execute(
+            "SELECT product_name, unit_price, stock FROM products WHERE product_id=%s", (product_id,))
+        req = self.cur.fetchone()
+        if req is None:
+            return None
+        product_dict = {"product_name": req[0], "unit_price": req[1],
+                       "stock": req[2]}
+
+        return product_dict
+
+
+
     '''Function to get all products'''
     def view_all_products(self):
         statement = "SELECT product_id, username, product_name, unit_price, stock FROM products;"
