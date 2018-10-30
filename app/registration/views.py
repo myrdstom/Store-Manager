@@ -1,7 +1,7 @@
 from app.registration import auth_v1
-from app_utils import empty_string_catcher, email_validator, is_string, is_Bool
+from app_utils import empty_string_catcher, email_validator, is_string
 from flask import request
-from app.models import User
+from database.models import User
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -56,7 +56,10 @@ class Login(Resource):
         if not check_password_hash(pswd, password):
             return {'message': 'Error: wrong password'}, 400
 
-        access_token = create_access_token(identity=query)
+        user = {"user_id": query[0], "username": query[2], "password": query[3], "is_admin": query[4]}
+
+
+        access_token = create_access_token(identity=user)
         return {'access_token': access_token}, 200
 
 

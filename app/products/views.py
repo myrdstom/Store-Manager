@@ -1,7 +1,7 @@
 from app.products import apcn_v1
 from app_utils import empty_string_catcher, is_string, is_integer
 from flask import request
-from app.models import Product
+from database.models import Product
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -34,6 +34,8 @@ class Products(Resource):
             return {"message": "Please review the values added"}, 400
         if not empty_string_catcher(product_name):
             return {'message': 'Empty values are not allowed'}, 400
+        if Product.query_product_name(product_name):
+            return {'message': 'A product with that product name already exists'}, 409
         prod = Product(product_name, unit_price, stock)
         prod.insert_product()
         return {'message': 'product created'}, 201

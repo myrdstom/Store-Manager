@@ -79,6 +79,15 @@ class Product:
         else:
             return response
 
+    def query_product_name(product_name):
+        """Method to retrieve a username from the database"""
+        response = Product.database_url().fetch_by_param('products', 'product_name', product_name)
+
+        if response is None:
+            return False
+        else:
+            return response
+
     def view_products():
         response = Product.database_url().view_all_products()
         return response

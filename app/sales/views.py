@@ -1,7 +1,7 @@
 from app.sales import apsn_v1
 from app_utils import empty_string_catcher, email_validator
 from flask import request, current_app as app, jsonify
-from app.models import Sale
+from database.models import Sale
 from database.db import DBHandler
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
