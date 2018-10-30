@@ -25,7 +25,8 @@ def is_string(value):
     return False
 
 def is_integer(value):
-    if isinstance(value, int):
+    if isinstance(value, int) and value > 0:
         return True
     return False
 
+#num < 0 and num.is_integer()

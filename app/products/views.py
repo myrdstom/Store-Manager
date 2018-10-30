@@ -61,7 +61,7 @@ class Products(Resource):
             if not empty_string_catcher(product_name):
                 return {'message': 'Empty values are not allowed'}, 400
             prod = Product.update_product(product_name, unit_price, stock, product_id)
-            if prod is None:
+            if prod is False:
                 return {'message': 'no such entry found'}, 400
             return prod, 200
         else:
