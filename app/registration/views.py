@@ -1,5 +1,5 @@
 from app.registration import auth_v1
-from app_utils import empty_string_catcher, email_validator
+from app_utils import empty_string_catcher, email_validator, is_string, is_Bool
 from flask import request
 from app.models import User
 from flask_restful import Resource, Api
@@ -19,8 +19,7 @@ class Registration(Resource):
         email = data['email']
         username = data['username']
         password = generate_password_hash(data['password'], method='sha256')
-        is_admin = data['is_admin']
-        if not isinstance(username, str) or not isinstance(password, str) or not isinstance(is_admin, bool):
+        if not is_string(username) or not is_string(password):
             return {"message": "Please review the values added"}, 400
 
         if not empty_string_catcher(username) or not empty_string_catcher(password):
@@ -33,7 +32,7 @@ class Registration(Resource):
         if User.query_email(email):
             return {'message': 'A user with that email already exists'}, 409
         else:
-            user = User(email, username, password, is_admin)
+            user = User(email, username, password)
             user.insert_user()
             return {'message': 'User successfully registered'}, 201
 9

@@ -9,11 +9,10 @@ from werkzeug.security import check_password_hash
 class User:
     """Class handles user object operations"""
 
-    def __init__(self, email, username, password, is_admin):
+    def __init__(self, email, username, password):
         self.email = email
         self.username = username
         self.password = password
-        self.is_admin = is_admin
 
     def database_url():
         db_obj = DBHandler(app.config['DATABASE_URL'])
@@ -47,7 +46,7 @@ class User:
         return True
 
     def insert_user(self):
-        user = User.database_url().create_user(self.email, self.username, self.password, self.is_admin)
+        user = User.database_url().create_user(self.email, self.username, self.password)
 
         if user is None:
             return False

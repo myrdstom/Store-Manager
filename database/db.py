@@ -50,10 +50,10 @@ class DBHandler:
 
     '''Functions to handle users and authentication'''
 
-    def create_user(self, email, username, password, admin):
-        self.cur.execute("INSERT INTO users (email, username, password, is_admin) "
-                         "VALUES( '{}', '{}', '{}', '{}');".format
-                         (email, username, password, admin))
+    def create_user(self, email, username, password):
+        self.cur.execute("INSERT INTO users (email, username, password) "
+                         "VALUES( '{}', '{}', '{}');".format
+                         (email, username, password))
 
     def find_by_username(self, username):
         query = "SELECT * FROM users WHERE username=%s"

@@ -14,7 +14,18 @@ def email_validator(value):
         return True
     return False
 
-def isBool(value):
+def is_Bool(value):
     if isinstance(value,bool):
         return True
     return False
+
+def is_string(value):
+    if isinstance(value, str):
+        return True
+    return False
+
+def is_integer(value):
+    if isinstance(value, int):
+        return True
+    return False
+
