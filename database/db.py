@@ -111,6 +111,12 @@ class DBHandler:
 
         return product_dict
 
+    """Function to update stock"""
+    def modify_stock(self, stock, product_id):
+        self.cur.execute(
+            "UPDATE products SET stock=%s WHERE product_id=%s",
+            (stock, product_id))
+
     '''Function to get all products'''
 
     def view_all_products(self):
@@ -140,17 +146,18 @@ class DBHandler:
     '''Function to get all sales'''
 
     def view_all_sales(self):
-        statement = "SELECT product_id, username, product_name, quantity, total FROM sales;"
+        statement = "SELECT sale_id, product_id, username, product_name, quantity, total FROM sales;"
         self.cur.execute(statement)
         rows = self.cur.fetchall()
         sales_list = []
         sales_dict = {}
         for row in rows:
-            sales_dict['product_id'] = row[0]
-            sales_dict['username'] = row[1]
-            sales_dict['product_name'] = row[2]
-            sales_dict['quantity'] = row[3]
-            sales_dict['total'] = row[4]
+            sales_dict['sale_id'] = row[0]
+            sales_dict['product_id'] = row[1]
+            sales_dict['username'] = row[2]
+            sales_dict['product_name'] = row[3]
+            sales_dict['quantity'] = row[4]
+            sales_dict['total'] = row[5]
             sales_list.append(sales_dict)
             sales_dict = {}
         return sales_list

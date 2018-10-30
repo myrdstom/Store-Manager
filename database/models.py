@@ -150,3 +150,12 @@ class Sale:
                 'quantity': sale_response[3],
                 'total': sale_response[3]
             }
+
+    @staticmethod
+    def update_stock(stock, product_id):
+        response = Product.database_url().modify_stock(stock, product_id)
+
+        if response is None:
+            return False
+        else:
+            return response
