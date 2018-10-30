@@ -34,6 +34,8 @@ class Products(Resource):
             return {"message": "Please review the values added"}, 400
         if not empty_string_catcher(product_name):
             return {'message': 'Empty values are not allowed'}, 400
+        if Product.query_product_name(product_name):
+            return {'message': 'A product with that product name already exists'}, 409
         prod = Product(product_name, unit_price, stock)
         prod.insert_product()
         return {'message': 'product created'}, 201
