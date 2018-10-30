@@ -6,7 +6,7 @@ from database.db import DBHandler
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from flask_jwt_extended import (create_access_token, jwt_required, get_jwt_identity)
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 API = Api(apsn_v1)
@@ -15,12 +15,17 @@ API = Api(apsn_v1)
 class Sales(Resource):
     """This function returns a list of all products in the inventory"""
 
+    @jwt_required
     def get(self, sale_id=0):
         if (sale_id):
             sal_id = Sale.view_single_sale(sale_id)
+            if sal_id is False:
+                return {'message': 'Sale does not exist'}
             return sal_id
         else:
             sal = Sale.view_sales()
+            if len(sal) == 0:
+                return {'message': 'There are no values in the database'}, 200
             return sal
 
     def post(self):
