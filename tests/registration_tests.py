@@ -35,19 +35,19 @@ class FlaskTestCase(BaseTestCase):
             self.assertEqual(response.status_code, 409)
             self.assertIn(b'A user with that username already exists', response.data)
 
-    # def test_existing_email(self):
-    #     with self.app.test_client() as client:
-    #         response = client.post("v1/auth/signup", content_type='application/json',
-    #                                data=json.dumps(dict(username="myrdstom",
-    #                                                     password="password",
-    #                                                     email="nserekopaul@gmail.com")))
-    #         self.assertEqual(response.status_code, 201)
-    #         response = client.post("v1/auth/signup", content_type='application/json',
-    #                                data=json.dumps(dict(username="testa",
-    #                                                     password="password",
-    #                                                     email="nserekopaul@gmail.com")))
-    #         self.assertEqual(response.status_code, 409)
-    #         self.assertIn(b'A user with that email already exists', response.data)
+    def test_existing_email(self):
+        with self.app.test_client() as client:
+            response = client.post("api/v1/signup", content_type='application/json',
+                                   data=json.dumps(dict(username="myrdstom",
+                                                        password="password",
+                                                        email="nserekopaul@gmail.com")))
+            self.assertEqual(response.status_code, 201)
+            response = client.post("api/v1/signup", content_type='application/json',
+                                   data=json.dumps(dict(username="testa",
+                                                        password="password",
+                                                        email="nserekopaul@gmail.com")))
+            self.assertEqual(response.status_code, 409)
+            self.assertIn(b'A user with that email already exists', response.data)
     #
     def test_create_user(self):
         with self.app.test_client() as client:
