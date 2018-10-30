@@ -4,8 +4,6 @@ import re
 from werkzeug.security import check_password_hash
 
 
-# db_obj = DBHandler(app.config['DATABASE_URL'])
-
 class User:
     """Class handles user object operations"""
 
@@ -55,8 +53,7 @@ class User:
 
 
 class Product:
-    def __init__(self, username, product_name, unit_price, stock):
-        self.username = username
+    def __init__(self, product_name, unit_price, stock):
         self.product_name = product_name
         self.unit_price = unit_price
         self.stock = stock
@@ -66,7 +63,7 @@ class Product:
         return db_obj
 
     def insert_product(self):
-        response = Product.database_url().create_product(self.username, self.product_name, self.unit_price, self.stock)
+        response = Product.database_url().create_product(self.product_name, self.unit_price, self.stock)
 
         if response is None:
             return False
@@ -93,10 +90,9 @@ class Product:
             return False
         else:
             return {
-                'username': response[1],
-                'product_name': response[2],
-                'unitprice': response[3],
-                'stock': response[4]
+                'product_name': response[1],
+                'unitprice': response[2],
+                'stock': response[3]
             }
 
     def delete_single_product(product_id):

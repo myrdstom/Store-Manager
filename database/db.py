@@ -1,6 +1,7 @@
 import psycopg2
 from urllib.parse import urlparse
 
+
 class DBHandler:
     def __init__(self, database_url):
         parsed_url = urlparse(database_url)
@@ -32,8 +33,7 @@ class DBHandler:
     def create_products_table(self):
         statement = "CREATE TABLE IF NOT EXISTS products (" \
                     "product_id SERIAL PRIMARY KEY , " \
-                    "username varchar NOT NULL , " \
-                    "product_name varchar NOT NULL UNIQUE, " \
+                    "product_name varchar NOT NULL, " \
                     "unit_price INT NOT NULL, " \
                     "stock INT NOT NULL)"
         self.cur.execute(statement)
@@ -54,18 +54,6 @@ class DBHandler:
         self.cur.execute("INSERT INTO users (email, username, password) "
                          "VALUES( '{}', '{}', '{}');".format
                          (email, username, password))
-
-    def find_by_username(self, username):
-        query = "SELECT * FROM users WHERE username=%s"
-        self.cur.execute(query, (username,))
-        user = self.cur.fetchone()
-        return user
-
-    def find_by_email(self, email):
-        query = "SELECT * FROM users WHERE email=%s"
-        self.cur.execute(query, (email,))
-        user = self.cur.fetchone()
-        return user
 
     def view_user(self):
         statement = "SELECT name, username, email, is_admin FROM users;"
@@ -104,11 +92,10 @@ class DBHandler:
 
     '''Functions to handle Products'''
 
-    def create_product(self, username, product_name, unit_price, stock):
-        self.cur.execute("INSERT INTO products (username, product_name, unit_price, stock) "
-                         "VALUES( '{}', '{}', '{}', '{}');".format
-                         (username, product_name, unit_price, stock))
-
+    def create_product(self, product_name, unit_price, stock):
+        self.cur.execute("INSERT INTO products (product_name, unit_price, stock) "
+                         "VALUES( '{}', '{}', '{}');".format
+                         (product_name, unit_price, stock))
 
     def modify_products(self, product_name, unit_price, stock, product_id):
         self.cur.execute(
@@ -120,40 +107,38 @@ class DBHandler:
         if req is None:
             return None
         product_dict = {"product_name": req[0], "unit_price": req[1],
-                       "stock": req[2]}
+                        "stock": req[2]}
 
         return product_dict
 
-
-
     '''Function to get all products'''
+
     def view_all_products(self):
-        statement = "SELECT product_id, username, product_name, unit_price, stock FROM products;"
+        statement = "SELECT product_id, product_name, unit_price, stock FROM products;"
         self.cur.execute(statement)
         rows = self.cur.fetchall()
         product_list = []
         product_dict = {}
         for row in rows:
             product_dict['product_id'] = row[0]
-            product_dict['username'] = row[1]
-            product_dict['product_name'] = row[2]
-            product_dict['unit_price'] = row[3]
-            product_dict['stock'] = row[4]
+            product_dict['product_name'] = row[1]
+            product_dict['unit_price'] = row[2]
+            product_dict['stock'] = row[3]
             product_list.append(product_dict)
             product_dict = {}
         return product_list
 
-
     """Functions to handle Sales"""
 
     """Function to create a sale"""
+
     def create_sale(self, product_id, username, product_name, quantity, total):
         self.cur.execute("INSERT INTO sales (product_id, username, product_name, quantity, total) "
                          "VALUES( '{}', '{}', '{}', '{}', '{}');".format
                          (product_id, username, product_name, quantity, total))
 
-
     '''Function to get all sales'''
+
     def view_all_sales(self):
         statement = "SELECT product_id, username, product_name, quantity, total FROM sales;"
         self.cur.execute(statement)
@@ -169,8 +154,6 @@ class DBHandler:
             sales_list.append(sales_dict)
             sales_dict = {}
         return sales_list
-
-
 
     """Trancating test database"""
 

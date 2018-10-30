@@ -43,8 +43,9 @@ class Login(Resource):
         username = data['username']
         password = data['password']
 
-        if not isinstance(username, str) or not isinstance(password, str):
-            return {'message': 'please insert correct values'}, 400
+        if not is_string(username) or not is_string(password):
+            return {"message": "Please review the values added"}, 400
+
         if not empty_string_catcher(username) or not empty_string_catcher(password):
             return {'message': 'please fill all fields'}, 400
 
