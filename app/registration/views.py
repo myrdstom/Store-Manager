@@ -1,7 +1,7 @@
 from app.registration import auth_v1
 from app_utils import empty_string_catcher, email_validator, is_string, is_Bool
 from flask import request
-from app.models import User
+from database.models import User
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
 

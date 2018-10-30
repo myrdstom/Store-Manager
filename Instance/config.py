@@ -19,7 +19,7 @@ class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
     DEBUG = True
     TESTING = True
-    DATABASE_URL = 'postgresql://postgres:rasengan1408@localhost:5432/test-store-manager'
+    DATABASE_URL = 'postgresql://postgres:rasengan1408@localhost:5432/test_store_manager'
 
 
 class StagingConfig(Config):

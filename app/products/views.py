@@ -1,7 +1,7 @@
 from app.products import apcn_v1
 from app_utils import empty_string_catcher, is_string, is_integer
 from flask import request
-from app.models import Product
+from database.models import Product
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
 
