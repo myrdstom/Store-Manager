@@ -36,10 +36,21 @@ class Products(Resource):
         prod.insert_product()
         return {'message': 'product created'}, 201
 
-    def delete(self, product_id):
-        prod_id = Product.delete_single_product(product_id)
-        return {'message': 'Record successfully deleted'}, 200
+    def put(self, product_id):
+        """This function lets the administrator edit a product"""
+        data = request.get_json()
+        product_name = data['product_name']
+        unit_price = data['unit_price']
+        stock = data['stock']
+        prod = Product.update_product(product_name, unit_price, stock, product_id)
+        if prod is None:
+            return {'message': 'no such entry found'}, 400
+        return prod, 200
 
+    def delete(self, product_id):
+        """This function lets the administrator delete a product"""
+        Product.delete_single_product(product_id)
+        return {'message': 'Record successfully deleted'}, 200
 
 
 API.add_resource(Products, '/products', '/products/<int:product_id>')

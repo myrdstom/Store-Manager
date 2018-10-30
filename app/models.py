@@ -74,6 +74,15 @@ class Product:
         else:
             return response
 
+    @staticmethod
+    def update_product(product_name, unit_price, stock, product_id):
+        response = Product.database_url().modify_products(product_name, unit_price, stock, product_id)
+
+        if response is None:
+            return False
+        else:
+            return response
+
     def view_products():
         response = Product.database_url().view_all_products()
         return response
