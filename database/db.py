@@ -33,8 +33,7 @@ class DBHandler:
     def create_products_table(self):
         statement = "CREATE TABLE IF NOT EXISTS products (" \
                     "product_id SERIAL PRIMARY KEY , " \
-                    "username varchar NOT NULL , " \
-                    "product_name varchar NOT NULL UNIQUE, " \
+                    "product_name varchar NOT NULL, " \
                     "unit_price INT NOT NULL, " \
                     "stock INT NOT NULL)"
         self.cur.execute(statement)
@@ -93,10 +92,10 @@ class DBHandler:
 
     '''Functions to handle Products'''
 
-    def create_product(self, username, product_name, unit_price, stock):
-        self.cur.execute("INSERT INTO products (username, product_name, unit_price, stock) "
-                         "VALUES( '{}', '{}', '{}', '{}');".format
-                         (username, product_name, unit_price, stock))
+    def create_product(self, product_name, unit_price, stock):
+        self.cur.execute("INSERT INTO products (product_name, unit_price, stock) "
+                         "VALUES( '{}', '{}', '{}');".format
+                         (product_name, unit_price, stock))
 
     def modify_products(self, product_name, unit_price, stock, product_id):
         self.cur.execute(
@@ -115,17 +114,16 @@ class DBHandler:
     '''Function to get all products'''
 
     def view_all_products(self):
-        statement = "SELECT product_id, username, product_name, unit_price, stock FROM products;"
+        statement = "SELECT product_id, product_name, unit_price, stock FROM products;"
         self.cur.execute(statement)
         rows = self.cur.fetchall()
         product_list = []
         product_dict = {}
         for row in rows:
             product_dict['product_id'] = row[0]
-            product_dict['username'] = row[1]
-            product_dict['product_name'] = row[2]
-            product_dict['unit_price'] = row[3]
-            product_dict['stock'] = row[4]
+            product_dict['product_name'] = row[1]
+            product_dict['unit_price'] = row[2]
+            product_dict['stock'] = row[3]
             product_list.append(product_dict)
             product_dict = {}
         return product_list

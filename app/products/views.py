@@ -1,8 +1,7 @@
 from app.products import apcn_v1
-from app_utils import empty_string_catcher, email_validator
-from flask import request, current_app as app, jsonify
+from app_utils import empty_string_catcher, is_string, is_integer
+from flask import request
 from app.models import Product
-from database.db import DBHandler
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -16,23 +15,26 @@ class Products(Resource):
         """This function returns a list of all products in the inventory or a single product"""
         if (product_id):
             prod_id = Product.view_single_product(product_id)
+            if prod_id is False:
+                return {'message': 'the product does not exist'}, 200
             return prod_id
         else:
             prod = Product.view_products()
+            if len(prod) == 0:
+                return {'message': 'There are no values in the database'}, 200
             return prod
 
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
         data = request.get_json()
-        username = data['username']
         product_name = data['product_name']
         unit_price = data['unit_price']
         stock = data['stock']
-        if not isinstance(product_name, str) or not isinstance(unit_price, int) or not isinstance(stock, int):
-            return {'message': 'Error:Invalid value please review product inputs'}, 400
+        if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock):
+            return {"message": "Please review the values added"}, 400
         if not empty_string_catcher(product_name):
             return {'message': 'Empty values are not allowed'}, 400
-        prod = Product(username, product_name, unit_price, stock)
+        prod = Product(product_name, unit_price, stock)
         prod.insert_product()
         return {'message': 'product created'}, 201
 
@@ -42,6 +44,10 @@ class Products(Resource):
         product_name = data['product_name']
         unit_price = data['unit_price']
         stock = data['stock']
+        if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock):
+            return {"message": "Please review the values added"}, 400
+        if not empty_string_catcher(product_name):
+            return {'message': 'Empty values are not allowed'}, 400
         prod = Product.update_product(product_name, unit_price, stock, product_id)
         if prod is None:
             return {'message': 'no such entry found'}, 400
