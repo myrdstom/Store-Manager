@@ -110,10 +110,10 @@ class DBHandler:
                          (username, product_name, unit_price, stock))
 
 
-    def modify_products(self, data, product_id):
+    def modify_products(self, product_name, unit_price, stock, product_id):
         self.cur.execute(
             "UPDATE products SET product_name=%s, unit_price=%s, stock=%s WHERE product_id=%s",
-            (data['product_name'], data['unit_price'], data['stock'], product_id))
+            (product_name, unit_price, stock, product_id))
         self.cur.execute(
             "SELECT product_name, unit_price, stock FROM products WHERE product_id=%s", (product_id,))
         req = self.cur.fetchone()
