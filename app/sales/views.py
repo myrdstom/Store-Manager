@@ -1,5 +1,5 @@
 from app.sales import apsn_v1
-from app_utils import empty_string_catcher, email_validator
+from app_utils import empty_string_catcher, is_integer
 from flask import request, current_app as app, jsonify
 from database.models import Sale,Product
 from database.db import DBHandler
@@ -31,13 +31,12 @@ class Sales(Resource):
         username = data['username']
         quantity = data['quantity']
         prod_id = Product.view_single_product(product_id)
+        if not is_integer(quantity) or not is_integer(product_id):
+            return {'message': 'Error:Invalid value added, please review'}, 400
         available_stock = prod_id['stock']
         unit_price = prod_id['unitprice']
         product_name = prod_id['product_name']
         total = data['quantity'] * unit_price
-        if not isinstance(product_id, int) or not isinstance(quantity, int):
-            return {'message': 'Error:Invalid value added, please review'}, 400
-
         stock = available_stock - quantity
         prod = Sale.update_stock(stock, product_id)
 

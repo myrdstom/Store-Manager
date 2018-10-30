@@ -96,9 +96,10 @@ class Product:
         response = Product.database_url().fetch_by_param('products', 'product_id', product_id)
 
         if response is None:
-            return False
+            return {'message': 'the product does not exist'}, 400
         else:
             return {
+                'product_id': response[0],
                 'product_name': response[1],
                 'unitprice': response[2],
                 'stock': response[3]
@@ -145,10 +146,11 @@ class Sale:
             return False
         else:
             return {
-                'username': sale_response[1],
-                'product_name': sale_response[2],
-                'quantity': sale_response[3],
-                'total': sale_response[3]
+                'sale_id': sale_response[0],
+                'username': sale_response[2],
+                'product_name': sale_response[3],
+                'quantity': sale_response[4],
+                'total': sale_response[5]
             }
 
     @staticmethod
