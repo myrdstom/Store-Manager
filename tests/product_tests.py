@@ -1,20 +1,20 @@
-import unittest
-import json
-from tests.base import BaseTestCase
-
-product_data = dict(product_name="Acer",
-                    unit_price=19000000,
-                    stock=100)
-
-sale_data = dict(product_id=1,
-                 quantity=32)
-
-empty_product_data = {}
-
-
-class FlaskTestCase(BaseTestCase):
-    def setUp(self):
-        self.app = create_app()
+# import unittest
+# import json
+# from tests.base import BaseTestCase
+#
+# product_data = dict(product_name="Acer",
+#                     unit_price=19000000,
+#                     stock=100)
+#
+# sale_data = dict(product_id=1,
+#                  quantity=32)
+#
+# empty_product_data = {}
+#
+#
+# class FlaskTestCase(BaseTestCase):
+#     def setUp(self):
+#         self.app = create_app()
 
     """Products tests"""
     #
