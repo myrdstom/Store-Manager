@@ -1,34 +1,51 @@
-# # import unittest
-# # import json
-# # from tests.base import BaseTestCase
-# #
-# # product_data = dict(product_name="Acer",
-# #                     unit_price=19000000,
-# #                     stock=100)
-# #
-# # sale_data = dict(product_id=1,
-# #                  quantity=32)
-# #
-# # empty_product_data = {}
-# #
-# #
-# # class FlaskTestCase(BaseTestCase):
-# #     def setUp(self):
-# #         self.app = create_app()
-#
-#     """Products tests"""
-#     #
-#     # """testing  GET all items in the inventory"""
-#     #
-#     # def test_get_all_inventory_items(self):
-#     #     with self.app.test_client() as client:
-#     #         response = client.get("/api/v1/products",
-#     #                               content_type="application/json",
-#     #                               data=json.dumps(product_data))
-#     #         response_json = json.loads(response.data.decode())
-#     #         self.assertEqual(response.status_code, 200)
-#     #         self.assertIn("Acer", response_json[0]['product_name'])
-#
+import unittest
+import json
+from tests.base import BaseTestCase
+
+product_data = dict(product_name="Acer",
+                    unit_price=19000000,
+                    stock=100)
+
+sale_data = dict(product_id=1,
+                 quantity=32)
+
+empty_product_data = {}
+
+
+class FlaskTestCase(BaseTestCase):
+    """Products tests"""
+
+    def test_add_new_inventory_item(self):
+        with self.app.test_client() as client:
+            response = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                'Authorization': 'Bearer ' +
+                                                                                 self.admin_login()[
+                                                                                     'access_token']},
+                                   data=json.dumps(product_data))
+            self.assertEqual(response.status_code, 201)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('product created', responseJson['message'])
+
+    """testing  GET all items in the inventory"""
+
+    def test_get_all_inventory_items(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                'Authorization': 'Bearer ' +
+                                                                                 self.admin_login()[
+                                                                                     'access_token']},
+                                   data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.get("/api/v1/products",
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(product_data))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("Acer", response_json[0]['product_name'])
+
 #     # """test empty product data"""
 #     #
 #     # def test_no_product_in_inventory(self):
@@ -63,14 +80,7 @@
 #     #         self.assertIn('product not in inventory', responseJson['message'])
 #     #
 #     # """testing adding an item to inventory"""
-#
-#     # def test_add_new_inventory_item(self):
-#     #     with self.app.test_client() as client:
-#     #         response = client.post('/api/v1/products', content_type='application/json',
-#     #                                data=json.dumps(product_data))
-#     #         self.assertEqual(response.status_code, 201)
-#     #         responseJson = json.loads(response.data.decode())
-#     #         self.assertIn('product created', responseJson['message'])
+
 #
 #     # """testing adding an item to inventory"""
 #     #
