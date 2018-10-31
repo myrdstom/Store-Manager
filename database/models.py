@@ -24,7 +24,7 @@ class User:
         if user is None:
             return False
         else:
-            return user
+            return {"user_id": user[0], "username": user[1], "password": user[2], "role": user[3]}
 
 
 
@@ -89,7 +89,7 @@ class Product:
         response = Product.database_url().fetch_by_param('products', 'product_id', product_id)
 
         if response is None:
-            return {'message': 'the product does not exist'}, 400
+            return {}
         else:
             return {
                 'product_id': response[0],
@@ -99,21 +99,20 @@ class Product:
             }
 
     def delete_single_product(product_id):
-        response = Product.database_url().delete_by_param('products', 'product_id', product_id)
-
-        if response is None:
-            return False
-        else:
+        resp = Product.database_url().fetch_by_param('products', 'product_id', product_id)
+        if resp:
+            Product.database_url().delete_by_param('products', 'product_id', product_id)
             return True
-
+        else:
+            return False
 
 class Sale:
-    def __init__(self, product_id, username, product_name, quantity, total):
-        self.product_id = product_id
-        self.username = username
-        self.product_name = product_name
-        self.quantity = quantity
-        self.total = total
+    def __init__(self,  **kwargs):
+        self.product_id = kwargs.get('product_id')
+        self.username = kwargs.get('username')
+        self.product_name = kwargs.get('product_name')
+        self.quantity = kwargs.get('quantity')
+        self.total = kwargs.get('total')
 
     def database_url():
         db_obj = DBHandler(app.config['DATABASE_URL'])

@@ -75,7 +75,7 @@ class DBHandler:
 
     def delete_by_param(self, table_name, column, value):
         """Fetches a single a parameter from a specific table and column"""
-        query = "DELETE FROM {} WHERE {} = '{}'".format(
+        query = "DELETE FROM {} WHERE {} = '{}';".format(
             table_name, column, value)
         self.cur.execute(query)
 

@@ -32,10 +32,13 @@ class Registration(Resource):
             else:
                 user = User(username, password, role)
                 user.insert_user()
-                return {'message': 'User successfully registered'}, 201
+                return {'message': 'User successfully registered', "username": username}, 201
         else:
-            return {'message':'you are not authorized to view this resource'}, 409
+            return {'message': 'you are not authorized to view this resource'}, 409
+
+
 9
+
 
 class Login(Resource):
     def post(self):
@@ -51,14 +54,10 @@ class Login(Resource):
         query = User.query_username(username)
         if not query:
             return {'message': 'The user does not exist, please register'}, 400
-        pswd = list(query)[2]
-        if not check_password_hash(pswd, password):
+        if not check_password_hash(query['password'], password):
             return {'message': 'Error: wrong password'}, 400
 
-        user = {"user_id": query[0], "username": query[1], "password": query[2], "role": query[3]}
-
-
-        access_token = create_access_token(identity=user)
+        access_token = create_access_token(identity=query)
         return {'access_token': access_token}, 200
 
 
