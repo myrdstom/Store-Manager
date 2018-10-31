@@ -22,23 +22,15 @@ class DBHandler:
 
     '''Create tables'''
     def create_user_table(self):
-        try:
-            pswd = generate_password_hash('password')
-            statement = "CREATE TABLE IF NOT EXISTS users (" \
-                        "userId SERIAL PRIMARY KEY , " \
-                        "username varchar NOT NULL UNIQUE, " \
-                        "password varchar NOT NULL, " \
-                        "is_admin BOOL NOT NULL DEFAULT FALSE); " \
-                        "INSERT  INTO  users (username, password, is_admin) " \
-                        "VALUES ('admin', " \
-                        "'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0',true) " \
-                        "ON CONFLICT DO NOTHING;"
-            self.cur.execute(statement)
-        except psycopg2.DatabaseError as e:
-            if self.conn:
-                self.conn.rollback()
-            raise e
-
+        statement = "CREATE TABLE IF NOT EXISTS users (" \
+                    "userId SERIAL PRIMARY KEY , " \
+                    "username varchar NOT NULL UNIQUE, " \
+                    "password varchar NOT NULL, " \
+                    "is_admin BOOL NOT NULL DEFAULT FALSE); " \
+                    "INSERT INTO users(username, password, is_admin) " \
+                    "SELECT 'admin', 'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0', " \
+                    "True WHERE NOT EXISTS (SELECT * FROM users WHERE username='admin');"
+        self.cur.execute(statement)
     def create_products_table(self):
         statement = "CREATE TABLE IF NOT EXISTS products (" \
                     "product_id SERIAL PRIMARY KEY , " \
@@ -64,6 +56,19 @@ class DBHandler:
                          "VALUES('{}', '{}');".format
                          (username, password))
 
+    def view_user(self):
+        statement = "SELECT name, username, is_admin FROM users;"
+        self.cur.execute(statement)
+        rows = self.cur.fetchall()
+        user_list = []
+        user_dict = {}
+        for row in rows:
+            user_dict['email'] = row[1]
+            user_dict['username'] = row[2]
+            user_dict['is_admin'] = row[4]
+            user_list.append(user_dict)
+            user_dict = {}
+        return user_list
 
     def auth_user(self, username):
         query = "SELECT * FROM users WHERE username=%s"
