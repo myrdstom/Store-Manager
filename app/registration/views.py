@@ -15,8 +15,7 @@ API = Api(auth_v1)
 class Registration(Resource):
     @jwt_required
     def post(self):
-        current_user = get_jwt_identity()
-        role = current_user['role']
+        role = get_jwt_identity()['role']
         if role == "store-owner":
             data = request.get_json()
             username = data['username']

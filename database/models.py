@@ -27,15 +27,6 @@ class User:
             return {"user_id": user[0], "username": user[1], "password": user[2], "role": user[3]}
 
 
-
-    def query_password(password):
-        """Method to retrieve a username from the database"""
-
-        user = User.database_url().fetch_by_param('users', 'password', password)
-        if not check_password_hash(user['password'], password):
-            return False
-        return True
-
     def insert_user(self):
         user = User.database_url().create_user(self.username, self.password, self.role)
 

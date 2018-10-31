@@ -26,8 +26,7 @@ class Products(Resource):
     @jwt_required
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
-        current_user = get_jwt_identity()
-        role = current_user['role']
+        role = get_jwt_identity()['role']
         if role == "store-owner":
             data = request.get_json()
             product_name = data['product_name']
@@ -48,8 +47,7 @@ class Products(Resource):
     @jwt_required
     def put(self, product_id):
         """This function lets the administrator edit a product"""
-        current_user = get_jwt_identity()
-        role = current_user['role']
+        role = get_jwt_identity()['role']
         if role == "store-owner":
             data = request.get_json()
             product_name = data['product_name']
@@ -66,17 +64,16 @@ class Products(Resource):
         else:
             return {'message':'you are not authorized to view this resource'}, 409
 
-    # @jwt_required
+    @jwt_required
     def delete(self, product_id):
         """This function lets the administrator delete a product"""
-        # current_user = get_jwt_identity()
-        # role = current_user['role']
-        # if role == "store-owner":
-        if Product.delete_single_product(product_id):
-            return {'message': 'Record successfully deleted'}, 200
-        return {'message': 'Product does not exist'}, 400
-        # else:
-        #     return {'message':'you are not authorized to view this resource'}, 409
+        role = get_jwt_identity()['role']
+        if role == "store-owner":
+            if Product.delete_single_product(product_id):
+                return {'message': 'Record successfully deleted'}, 200
+            return {'message': 'Product does not exist'}, 400
+        else:
+            return {'message':'you are not authorized to view this resource'}, 409
 
 
 API.add_resource(Products, '/products', '/products/<int:product_id>')
