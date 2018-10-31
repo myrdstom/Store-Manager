@@ -21,6 +21,8 @@ addons:
 env:
   global:
   - PGPORT=5433
+  - PGUSER=postgres
+  - PGHOST=localhost
 
 
 before_script:
