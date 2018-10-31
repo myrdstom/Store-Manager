@@ -89,6 +89,19 @@ class Product:
                 'stock': response[3]
             }
 
+    def view_single_product(product_name):
+        response = Product.database_url().fetch_by_param('products', 'product_name', product_name)
+
+        if response is None:
+            return {}
+        else:
+            return {
+                'product_id': response[0],
+                'product_name': response[1],
+                'unitprice': response[2],
+                'stock': response[3]
+            }
+
     def delete_single_product(product_id):
         resp = Product.database_url().fetch_by_param('products', 'product_id', product_id)
         if resp:
@@ -99,7 +112,6 @@ class Product:
 
 class Sale:
     def __init__(self,  **kwargs):
-        self.product_id = kwargs.get('product_id')
         self.username = kwargs.get('username')
         self.product_name = kwargs.get('product_name')
         self.quantity = kwargs.get('quantity')
@@ -110,8 +122,7 @@ class Sale:
         return db_obj
 
     def insert_sale(self):
-        sale_response = Sale.database_url().create_sale(self.product_id,
-                                                        self.username, self.product_name, self.quantity, self.total)
+        sale_response = Sale.database_url().create_sale(self.username, self.product_name, self.quantity, self.total)
 
         if sale_response is None:
             return False
@@ -130,10 +141,10 @@ class Sale:
         else:
             return {
                 'sale_id': sale_response[0],
-                'username': sale_response[2],
-                'product_name': sale_response[3],
-                'quantity': sale_response[4],
-                'total': sale_response[5]
+                'username': sale_response[1],
+                'product_name': sale_response[2],
+                'quantity': sale_response[3],
+                'total': sale_response[4]
             }
 
     @staticmethod

@@ -44,7 +44,6 @@ class DBHandler:
     def create_sales_table(self):
         statement = "CREATE TABLE IF NOT EXISTS sales (" \
                     "sale_id SERIAL PRIMARY KEY , " \
-                    "product_id  INT NOT NULL , " \
                     "username varchar NOT NULL, " \
                     "product_name varchar NOT NULL, " \
                     "quantity INT NOT NULL, " \
@@ -102,10 +101,10 @@ class DBHandler:
 
     """Function to update stock"""
 
-    def modify_stock(self, stock, product_id):
+    def modify_stock(self, stock, product_name):
         self.cur.execute(
-            "UPDATE products SET stock=%s WHERE product_id=%s",
-            (stock, product_id))
+            "UPDATE products SET stock=%s WHERE product_name=%s",
+            (stock, product_name))
 
     '''Function to get all products'''
 
@@ -128,26 +127,25 @@ class DBHandler:
 
     """Function to create a sale"""
 
-    def create_sale(self, product_id, username, product_name, quantity, total):
-        self.cur.execute("INSERT INTO sales (product_id, username, product_name, quantity, total) "
-                         "VALUES( '{}', '{}', '{}', '{}', '{}');".format
-                         (product_id, username, product_name, quantity, total))
+    def create_sale(self, username, product_name, quantity, total):
+        self.cur.execute("INSERT INTO sales (username, product_name, quantity, total) "
+                         "VALUES('{}', '{}', '{}', '{}');".format
+                         (username, product_name, quantity, total))
 
     '''Function to get all sales'''
 
     def view_all_sales(self):
-        statement = "SELECT sale_id, product_id, username, product_name, quantity, total FROM sales;"
+        statement = "SELECT sale_id, username, product_name, quantity, total FROM sales;"
         self.cur.execute(statement)
         rows = self.cur.fetchall()
         sales_list = []
         sales_dict = {}
         for row in rows:
             sales_dict['sale_id'] = row[0]
-            sales_dict['product_id'] = row[1]
-            sales_dict['username'] = row[2]
-            sales_dict['product_name'] = row[3]
-            sales_dict['quantity'] = row[4]
-            sales_dict['total'] = row[5]
+            sales_dict['username'] = row[1]
+            sales_dict['product_name'] = row[2]
+            sales_dict['quantity'] = row[3]
+            sales_dict['total'] = row[4]
             sales_list.append(sales_dict)
             sales_dict = {}
         return sales_list
