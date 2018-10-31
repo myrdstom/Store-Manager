@@ -64,13 +64,13 @@
     #
     # """testing adding an item to inventory"""
 
-    def test_add_new_inventory_item(self):
-        with self.app.test_client() as client:
-            response = client.post('/api/v1/products', content_type='application/json',
-                                   data=json.dumps(product_data))
-            self.assertEqual(response.status_code, 201)
-            responseJson = json.loads(response.data.decode())
-            self.assertIn('product created', responseJson['message'])
+    # def test_add_new_inventory_item(self):
+    #     with self.app.test_client() as client:
+    #         response = client.post('/api/v1/products', content_type='application/json',
+    #                                data=json.dumps(product_data))
+    #         self.assertEqual(response.status_code, 201)
+    #         responseJson = json.loads(response.data.decode())
+    #         self.assertIn('product created', responseJson['message'])
 
     # """testing adding an item to inventory"""
     #
