@@ -77,7 +77,7 @@ class FlaskTestCase(BaseTestCase):
                                   data=json.dumps(product_data))
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            # self.assertIn("Acer", response_json['product_name'])
+            self.assertIn("Acer", response_json['product_name'])
 
     """testing  GET a single item in the inventory"""
 
@@ -182,28 +182,64 @@ class FlaskTestCase(BaseTestCase):
                                   data=json.dumps(sale_data))
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
-            # self.assertIn("Acer", response_json[0]['product_name'])
+            response = client.get("/api/v1/sales",
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                 data=json.dumps(sale_data))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("Acer", response_json[0]['product_name'])
+
+    """testing  GET a single sale"""
+
+    def test_get_one_sale(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products',
+                                    headers={'Content-Type': 'application/json',
+                                             'Authorization': 'Bearer ' +
+                                                              self.admin_login()[
+                                                                  'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.post("/api/v1/sales",
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.login_user()[
+                                                                 'access_token']},
+                                   data=json.dumps(sale_data))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 201)
+            response = client.get("/api/v1/sales/1",
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(sale_data))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("Acer", response_json['product_name'])
 #     #
-#     # """testing  GET a single sale"""
-#     #
-#     # def test_get_one_sale(self):
-#     #     with self.app.test_client() as client:
-#     #         response = client.get("/api/v1/sales/1",
-#     #                               content_type="application/json",
-#     #                               data=json.dumps(sale_data))
-#     #         response_json = json.loads(response.data.decode())
-#     #         self.assertEqual(response.status_code, 200)
-#     #         self.assertIn("Acer", response_json[0]['product_name'])
-#     #
-#     # """testing adding a sale"""
-#     #
-#     # def test_add_new_sale(self):
-#     #     with self.app.test_client() as client:
-#     #         response = client.post('/api/v1/sales', content_type='application/json',
-#     #                                data=json.dumps(sale_data))
-#     #         self.assertEqual(response.status_code, 201)
-#     #         responseJson = json.loads(response.data.decode())
-#     #         self.assertIn('sale made', responseJson['message'])
+    """testing adding a sale"""
+
+    def test_add_a_sale(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products',
+                                    headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.post("/api/v1/sales",
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.login_user()[
+                                                                'access_token']},
+                                  data=json.dumps(sale_data))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 201)
 #     #
 #     # """Testing for wrong column name"""
 #     #
