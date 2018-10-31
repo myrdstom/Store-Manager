@@ -1,5 +1,6 @@
 import psycopg2
 from urllib.parse import urlparse
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class DBHandler:
@@ -24,10 +25,12 @@ class DBHandler:
     def create_user_table(self):
         statement = "CREATE TABLE IF NOT EXISTS users (" \
                     "userId SERIAL PRIMARY KEY , " \
-                    "email varchar NOT NULL UNIQUE, " \
                     "username varchar NOT NULL UNIQUE, " \
                     "password varchar NOT NULL, " \
-                    "is_admin BOOL NOT NULL DEFAULT FALSE)"
+                    "role varchar NOT NULL); " \
+                    "INSERT INTO users(username, password, role) " \
+                    "SELECT 'admin', 'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0', " \
+                    "'store-owner' WHERE NOT EXISTS (SELECT * FROM users WHERE username='admin');"
         self.cur.execute(statement)
 
     def create_products_table(self):
@@ -41,7 +44,6 @@ class DBHandler:
     def create_sales_table(self):
         statement = "CREATE TABLE IF NOT EXISTS sales (" \
                     "sale_id SERIAL PRIMARY KEY , " \
-                    "product_id  INT NOT NULL , " \
                     "username varchar NOT NULL, " \
                     "product_name varchar NOT NULL, " \
                     "quantity INT NOT NULL, " \
@@ -50,30 +52,16 @@ class DBHandler:
 
     '''Functions to handle users and authentication'''
 
-    def create_user(self, email, username, password):
-        self.cur.execute("INSERT INTO users (email, username, password) "
-                         "VALUES( '{}', '{}', '{}');".format
-                         (email, username, password))
-
-    def view_user(self):
-        statement = "SELECT name, username, email, is_admin FROM users;"
-        self.cur.execute(statement)
-        rows = self.cur.fetchall()
-        user_list = []
-        user_dict = {}
-        for row in rows:
-            user_dict['email'] = row[1]
-            user_dict['username'] = row[2]
-            user_dict['is_admin'] = row[4]
-            user_list.append(user_dict)
-            user_dict = {}
-        return user_list
+    def create_user(self, username, password, role):
+        self.cur.execute("INSERT INTO users (username, password, role) "
+                         "VALUES('{}', '{}', 'shop-attendant');".format
+                         (username, password, role))
 
     def auth_user(self, username):
         query = "SELECT * FROM users WHERE username=%s"
         self.cur.execute(query, (username,))
         user = self.cur.fetchone()
-        userDict = {"username": user[2], "password": user[3], "is_admin": user[4]}
+        userDict = {"username": user[2], "password": user[3], "role": user[4]}
         return userDict
 
     def fetch_by_param(self, table_name, column, value):
@@ -86,7 +74,7 @@ class DBHandler:
 
     def delete_by_param(self, table_name, column, value):
         """Fetches a single a parameter from a specific table and column"""
-        query = "DELETE FROM {} WHERE {} = '{}'".format(
+        query = "DELETE FROM {} WHERE {} = '{}';".format(
             table_name, column, value)
         self.cur.execute(query)
 
@@ -111,6 +99,13 @@ class DBHandler:
 
         return product_dict
 
+    """Function to update stock"""
+
+    def modify_stock(self, stock, product_name):
+        self.cur.execute(
+            "UPDATE products SET stock=%s WHERE product_name=%s",
+            (stock, product_name))
+
     '''Function to get all products'''
 
     def view_all_products(self):
@@ -132,21 +127,21 @@ class DBHandler:
 
     """Function to create a sale"""
 
-    def create_sale(self, product_id, username, product_name, quantity, total):
-        self.cur.execute("INSERT INTO sales (product_id, username, product_name, quantity, total) "
-                         "VALUES( '{}', '{}', '{}', '{}', '{}');".format
-                         (product_id, username, product_name, quantity, total))
+    def create_sale(self, username, product_name, quantity, total):
+        self.cur.execute("INSERT INTO sales (username, product_name, quantity, total) "
+                         "VALUES('{}', '{}', '{}', '{}');".format
+                         (username, product_name, quantity, total))
 
     '''Function to get all sales'''
 
     def view_all_sales(self):
-        statement = "SELECT product_id, username, product_name, quantity, total FROM sales;"
+        statement = "SELECT sale_id, username, product_name, quantity, total FROM sales;"
         self.cur.execute(statement)
         rows = self.cur.fetchall()
         sales_list = []
         sales_dict = {}
         for row in rows:
-            sales_dict['product_id'] = row[0]
+            sales_dict['sale_id'] = row[0]
             sales_dict['username'] = row[1]
             sales_dict['product_name'] = row[2]
             sales_dict['quantity'] = row[3]

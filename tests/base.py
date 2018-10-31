@@ -24,6 +24,11 @@ class BaseTestCase(unittest.TestCase):
         handler.create_products_table()
         handler.create_sales_table()
 
+        self.admin_user = {
+            'username': 'admin',
+            'password': 'password'
+        }
+
         self.user_data = {
 
             'username': 'myrdstom',
@@ -36,20 +41,26 @@ class BaseTestCase(unittest.TestCase):
         }
 
     def create_user(self):
-        response = self.client.post("api/v1/signup", content_type='application/json',
+        response = self.client.post("api/v1/signup",
+                                    headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
                                     data=json.dumps(dict(username="myrdstom",
-                                                         password="password",
-                                                         email="nserekopaul@gmail.com",
-                                                         is_admin=bool('true'))))
+                                                         password="password")))
         return response
 
     def create_second_user(self):
         response = self.client.post("api/v1/signup", content_type='application/json',
                                     data=json.dumps(dict(username="bgpeter",
-                                                         password="password",
-                                                         email="bgpeter@gmail.com",
-                                                         is_admin=bool('true'))))
+                                                         password="password")))
         return response
+
+    def admin_login(self):
+        login_response = self.client.post('api/v1/login', content_type='application/json',
+                                          data=json.dumps(self.admin_user))
+        login_result = json.loads(login_response.data.decode())
+        return login_result
 
     def login_user(self):
         login_response = self.client.post('api/v1/login', content_type='application/json',
