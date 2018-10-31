@@ -90,21 +90,8 @@ class FlaskTestCase(BaseTestCase):
                                                                 'access_token']},
                                   data=json.dumps(product_data))
             responseJson = json.loads(response.data.decode())
-            self.assertIn('the product does not exist', responseJson['message'])
+            self.assertEqual(response.status_code, 200)
 
-    #     #
-    #     # """Testing for wrong data type inserted"""
-    #     #
-    #     # def test_wrong_data_type(self):
-    #     #     with self.app.test_client() as client:
-    #     #         response = client.post('/api/v1/products', content_type='application/json',
-    #     #                                data=json.dumps(dict(product_name="Acer",
-    #     #                                                     unit_price="19000000",
-    #     #                                                     stock=100)))
-    #     #         self.assertEqual(response.status_code, 400)
-    #     #         responseJson = json.loads(response.data.decode())
-    #     #         self.assertIn('Error:Invalid value please review product inputs', responseJson['message'])
-    #     #
     """Testing for empty space"""
 
     def test_empty_space(self):
@@ -119,7 +106,7 @@ class FlaskTestCase(BaseTestCase):
                                                         stock=100)))
             self.assertEqual(response.status_code, 400)
             responseJson = json.loads(response.data.decode())
-            self.assertIn('Empty values are not allowed', responseJson['message'])
+            self.assertIn('Please review the values added', responseJson['message'])
 
     """Testing the edit product endpoint"""
 

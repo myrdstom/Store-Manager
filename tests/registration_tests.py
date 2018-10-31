@@ -62,7 +62,7 @@ class FlaskTestCase(BaseTestCase):
                                    data=json.dumps(dict(username="  ",
                                                         password="password")))
             self.assertEqual(response.status_code, 400)
-            self.assertIn(b'please fill all fields', response.data)
+            self.assertIn(b'Please review the values added', response.data)
 
     """Implement tests for the login endpoint"""
 
@@ -74,7 +74,7 @@ class FlaskTestCase(BaseTestCase):
                                    data=json.dumps(dict(username="  ",
                                                         password="password")))
             self.assertEqual(response.status_code, 400)
-            self.assertIn(b'please fill all fields', response.data)
+            self.assertIn(b'Please review the values added', response.data)
 
     """Testing incorrect values for the log in endpoint"""
 
