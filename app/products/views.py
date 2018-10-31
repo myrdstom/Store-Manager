@@ -26,8 +26,7 @@ class Products(Resource):
     @jwt_required
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
-        role = get_jwt_identity()['role']
-        if role == "store-owner":
+        if get_jwt_identity()['role'] == "store-owner":
             data = request.get_json()
             product_name = data['product_name']
             unit_price = data['unit_price']
@@ -47,8 +46,7 @@ class Products(Resource):
     @jwt_required
     def put(self, product_id):
         """This function lets the administrator edit a product"""
-        role = get_jwt_identity()['role']
-        if role == "store-owner":
+        if get_jwt_identity()['role'] == "store-owner":
             data = request.get_json()
             product_name = data['product_name']
             unit_price = data['unit_price']
@@ -67,8 +65,7 @@ class Products(Resource):
     @jwt_required
     def delete(self, product_id):
         """This function lets the administrator delete a product"""
-        role = get_jwt_identity()['role']
-        if role == "store-owner":
+        if get_jwt_identity()['role'] == "store-owner":
             if Product.delete_single_product(product_id):
                 return {'message': 'Record successfully deleted'}, 200
             return {'message': 'Product does not exist'}, 400
