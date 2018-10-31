@@ -29,4 +29,9 @@ def is_integer(value):
         return True
     return False
 
-#num < 0 and num.is_integer()
+def is_space(value):
+    if re.search(r"\s", value):
+        return True
+    return False
+
+    #num < 0 and num.is_integer()

@@ -3,7 +3,6 @@ from app_utils import empty_string_catcher, is_string, is_integer
 from flask import request
 from database.models import Product
 from flask_restful import Resource, Api
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 API = Api(apcn_v1)
@@ -28,8 +27,8 @@ class Products(Resource):
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
         current_user = get_jwt_identity()
-        is_admin = current_user['is_admin']
-        if is_admin:
+        role = current_user['role']
+        if role == "store-owner":
             data = request.get_json()
             product_name = data['product_name']
             unit_price = data['unit_price']
@@ -50,8 +49,8 @@ class Products(Resource):
     def put(self, product_id):
         """This function lets the administrator edit a product"""
         current_user = get_jwt_identity()
-        is_admin = current_user['is_admin']
-        if is_admin:
+        role = current_user['role']
+        if role == "store-owner":
             data = request.get_json()
             product_name = data['product_name']
             unit_price = data['unit_price']
@@ -63,7 +62,7 @@ class Products(Resource):
             prod = Product.update_product(product_name, unit_price, stock, product_id)
             if prod is False:
                 return {'message': 'no such entry found'}, 400
-            return prod, 200
+            return prod, 201
         else:
             return {'message':'you are not authorized to view this resource'}, 409
 
@@ -71,8 +70,8 @@ class Products(Resource):
     def delete(self, product_id):
         """This function lets the administrator delete a product"""
         current_user = get_jwt_identity()
-        is_admin = current_user['is_admin']
-        if is_admin:
+        role = current_user['role']
+        if role == "store-owner":
             Product.delete_single_product(product_id)
             if Product.delete_single_product(product_id) is False:
                 return {'message':'Product does not exist'}, 400

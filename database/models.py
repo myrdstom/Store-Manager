@@ -7,9 +7,11 @@ from werkzeug.security import check_password_hash
 class User:
     """Class handles user object operations"""
 
-    def __init__(self,username, password):
+    def __init__(self,username, password, role):
         self.username = username
         self.password = password
+        self.role = role
+
 
     def database_url():
         db_obj = DBHandler(app.config['DATABASE_URL'])
@@ -35,7 +37,7 @@ class User:
         return True
 
     def insert_user(self):
-        user = User.database_url().create_user(self.username, self.password)
+        user = User.database_url().create_user(self.username, self.password, self.role)
 
         if user is None:
             return False

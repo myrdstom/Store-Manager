@@ -41,7 +41,11 @@ class BaseTestCase(unittest.TestCase):
         }
 
     def create_user(self):
-        response = self.client.post("api/v1/signup", content_type='application/json',
+        response = self.client.post("api/v1/signup",
+                                    headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
                                     data=json.dumps(dict(username="myrdstom",
                                                          password="password")))
         return response
