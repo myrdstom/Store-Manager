@@ -23,7 +23,7 @@ env:
   - PGPORT=5433
   - PGUSER=postgres
   - PGHOST=localhost
-  - PGPASSWORD=rasengan1408
+  - PGPASSWORD=
 
 
 before_script:
