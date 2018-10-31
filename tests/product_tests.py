@@ -15,6 +15,18 @@ empty_product_data = {}
 class FlaskTestCase(BaseTestCase):
     """Products tests"""
 
+    def test_invalid_url(self):
+        with self.app.test_client() as client:
+            response = client.post('/api/v1//products', headers={'Content-Type': 'application/json',
+                                                                'Authorization': 'Bearer ' +
+                                                                                 self.admin_login()[
+                                                                                     'access_token']},
+                                   data=json.dumps(product_data))
+            self.assertEqual(response.status_code, 404)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('The requested Resource does not exist; Please review the URL', responseJson['message'])
+
+    """Test adding a new item to the inventory"""
     def test_add_new_inventory_item(self):
         with self.app.test_client() as client:
             response = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
