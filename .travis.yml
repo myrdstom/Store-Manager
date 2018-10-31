@@ -11,8 +11,6 @@ services:
   - postgresql
 
 
-before_script:
-  - psql -c 'CREATE DATABASE test_store_manager;' -U postgres
 
 addons:
   postgresql: "10"
@@ -23,6 +21,10 @@ addons:
 env:
   global:
   - PGPORT=5433
+
+
+before_script:
+  - psql -c 'CREATE DATABASE test_store_manager;' -U postgres
 
 # command to run tests
 script:
