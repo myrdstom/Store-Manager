@@ -20,12 +20,9 @@ class Registration(Resource):
             data = request.get_json()
             username = data['username']
             password = generate_password_hash(data['password'], method='sha256')
-            if not is_string(username) or not is_string(password):
+            if not is_string(username) or not is_string(password) or not empty_string_catcher(username) \
+                    or not empty_string_catcher(password):
                 return {"message": "Please review the values added"}, 400
-
-            if not empty_string_catcher(username) or not empty_string_catcher(password):
-                return {'message': 'please fill all fields'}, 400
-
             if User.query_username(username):
                 return {'message': 'A user with that username already exists'}, 409
             else:
@@ -45,11 +42,9 @@ class Login(Resource):
         username = data['username']
         password = data['password']
 
-        if not is_string(username) or not is_string(password):
+        if not is_string(username) or not is_string(password) \
+                or not empty_string_catcher(username) or not empty_string_catcher(password):
             return {"message": "Please review the values added"}, 400
-
-        if not empty_string_catcher(username) or not empty_string_catcher(password):
-            return {'message': 'please fill all fields'}, 400
         query = User.query_username(username)
         if not query:
             return {'message': 'The user does not exist, please register'}, 400
