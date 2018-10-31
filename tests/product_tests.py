@@ -77,7 +77,6 @@ class FlaskTestCase(BaseTestCase):
                                   data=json.dumps(product_data))
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            self.assertIn("Acer", response_json['product_name'])
 
     """testing  GET a single item in the inventory"""
 
