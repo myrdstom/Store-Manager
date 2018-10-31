@@ -14,7 +14,7 @@ class Products(Resource):
         """This function returns a list of all products in the inventory or a single product"""
         if (product_id):
             prod_id = Product.view_single_product(product_id)
-            if prod_id is False:
+            if not prod_id:
                 return {'message': 'the product does not exist'}, 200
             return prod_id
         else:
