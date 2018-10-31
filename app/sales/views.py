@@ -38,7 +38,8 @@ class Sales(Resource):
         if not is_integer(quantity) or not is_integer(product_id):
             return {'message': 'Error:Invalid value added, please review'}, 400
         prod_id = Product.view_single_product(product_id)
-
+        # if prod_id is False:
+        #     return {'message': 'Product does not exist'}, 400
         available_stock = prod_id['stock']
         unit_price = prod_id['unitprice']
         product_name = prod_id['product_name']

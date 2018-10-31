@@ -1,5 +1,6 @@
 import psycopg2
 from urllib.parse import urlparse
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class DBHandler:
@@ -20,15 +21,23 @@ class DBHandler:
         self.cur = self.conn.cursor()
 
     '''Create tables'''
-
     def create_user_table(self):
-        statement = "CREATE TABLE IF NOT EXISTS users (" \
-                    "userId SERIAL PRIMARY KEY , " \
-                    "email varchar NOT NULL UNIQUE, " \
-                    "username varchar NOT NULL UNIQUE, " \
-                    "password varchar NOT NULL, " \
-                    "is_admin BOOL NOT NULL DEFAULT FALSE)"
-        self.cur.execute(statement)
+        try:
+            pswd = generate_password_hash('password')
+            statement = "CREATE TABLE IF NOT EXISTS users (" \
+                        "userId SERIAL PRIMARY KEY , " \
+                        "username varchar NOT NULL UNIQUE, " \
+                        "password varchar NOT NULL, " \
+                        "is_admin BOOL NOT NULL DEFAULT FALSE); " \
+                        "INSERT  INTO  users (username, password, is_admin) " \
+                        "VALUES ('admin', " \
+                        "'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0',true) " \
+                        "ON CONFLICT DO NOTHING;"
+            self.cur.execute(statement)
+        except psycopg2.DatabaseError as e:
+            if self.conn:
+                self.conn.rollback()
+            raise e
 
     def create_products_table(self):
         statement = "CREATE TABLE IF NOT EXISTS products (" \
@@ -50,24 +59,11 @@ class DBHandler:
 
     '''Functions to handle users and authentication'''
 
-    def create_user(self, email, username, password):
-        self.cur.execute("INSERT INTO users (email, username, password) "
-                         "VALUES( '{}', '{}', '{}');".format
-                         (email, username, password))
+    def create_user(self, username, password):
+        self.cur.execute("INSERT INTO users (username, password) "
+                         "VALUES('{}', '{}');".format
+                         (username, password))
 
-    def view_user(self):
-        statement = "SELECT name, username, email, is_admin FROM users;"
-        self.cur.execute(statement)
-        rows = self.cur.fetchall()
-        user_list = []
-        user_dict = {}
-        for row in rows:
-            user_dict['email'] = row[1]
-            user_dict['username'] = row[2]
-            user_dict['is_admin'] = row[4]
-            user_list.append(user_dict)
-            user_dict = {}
-        return user_list
 
     def auth_user(self, username):
         query = "SELECT * FROM users WHERE username=%s"

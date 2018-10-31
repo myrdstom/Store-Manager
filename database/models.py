@@ -7,8 +7,7 @@ from werkzeug.security import check_password_hash
 class User:
     """Class handles user object operations"""
 
-    def __init__(self, email, username, password):
-        self.email = email
+    def __init__(self,username, password):
         self.username = username
         self.password = password
 
@@ -25,15 +24,7 @@ class User:
         else:
             return user
 
-    def query_email(email):
-        """Method to retrieve a username from the database"""
 
-        user = User.database_url().fetch_by_param('users', 'email', email)
-
-        if user is None:
-            return False
-        else:
-            return user
 
     def query_password(password):
         """Method to retrieve a username from the database"""
@@ -44,7 +35,7 @@ class User:
         return True
 
     def insert_user(self):
-        user = User.database_url().create_user(self.email, self.username, self.password)
+        user = User.database_url().create_user(self.username, self.password)
 
         if user is None:
             return False
