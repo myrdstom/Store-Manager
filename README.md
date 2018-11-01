@@ -67,7 +67,7 @@ To setup,
 
 
 ## Deployment
-The Python application is hosted on [Heroku](https://store-manager-challenge-2.herokuapp.com/)
+The Python application is hosted on [Heroku](https://store-manager-heroku.herokuapp.com/)
 
 ##Built with
 The project has been built with the following technologies so far:
