@@ -23,7 +23,7 @@ class Registration(Resource):
             if not is_string(username) or not is_string(password) or not empty_string_catcher(username) \
                     or not empty_string_catcher(password):
                 return {"message": "Please review the values added"}, 400
-            if User.query_username(username):
+            if User.get_by_username(username):
                 return {'message': 'A user with that username already exists'}, 409
             else:
                 user = User(username, password, role)
@@ -43,7 +43,7 @@ class Login(Resource):
         if not is_string(username) or not is_string(password) \
                 or not empty_string_catcher(username) or not empty_string_catcher(password):
             return {"message": "Please review the values added"}, 400
-        query = User.query_username(username)
+        query = User.get_by_username(username)
         if not query:
             return {'message': 'The user does not exist, please register'}, 400
         if not check_password_hash(query['password'], password):

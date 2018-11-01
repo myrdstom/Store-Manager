@@ -35,7 +35,8 @@ class Sales(Resource):
             product_name = data['product_name']
             username = current_user
             quantity = data['quantity']
-            if not is_integer(quantity) or not is_string(product_name) or not empty_string_catcher(product_name):
+            if not is_integer(quantity) or not is_string(product_name) or not empty_string_catcher(product_name) \
+                    or quantity < 0:
                 return {'message': 'Error:Invalid value added, please review'}, 400
             prod_id = Product.view_single_product_by_name(product_name)
             if not prod_id:

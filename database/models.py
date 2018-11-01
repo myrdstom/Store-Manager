@@ -18,9 +18,10 @@ class User:
         self.password = password
         self.role = role
 
-    def query_username(username):
+    def get_by_username(username):
         """Method to retrieve a username from the database"""
         user = DatabaseUrl.database_url().fetch_by_param('users', 'username', username)
+        # response = dict()
 
         if user is None:
             return False

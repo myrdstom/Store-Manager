@@ -19,9 +19,9 @@ class DBHandler:
                 port=port)
             self.conn.autocommit = True
             self.cur = self.conn.cursor()
-            print("Successfully connected to the database")
         except Exception:
             print("failed to connect")
+            self.conn.rollback()
 
     '''Create tables'''
 
@@ -38,6 +38,7 @@ class DBHandler:
             self.cur.execute(statement)
         except Exception:
             print("failed to create user table")
+            self.conn.rollback()
 
     def create_products_table(self):
         try:
@@ -49,6 +50,7 @@ class DBHandler:
             self.cur.execute(statement)
         except Exception:
             print("failed to create products table")
+            self.conn.rollback()
 
     def create_sales_table(self):
         try:
@@ -61,6 +63,7 @@ class DBHandler:
             self.cur.execute(statement)
         except Exception:
             print("failed to create sales table")
+            self.conn.rollback()
 
     '''Functions to handle users and authentication'''
 
