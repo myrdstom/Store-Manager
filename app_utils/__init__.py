@@ -43,7 +43,7 @@ def check_for_letters(value):
     return False
 
 
-class ValidUser:
+class ValidateUserData:
     def __init__(self, username, password):
         self.username = username
         self.password = password
@@ -51,4 +51,17 @@ class ValidUser:
     def validate_user(self):
         if not is_string(self.username) or not is_string(self.password) \
                 or not empty_string_catcher(self.username) or not empty_string_catcher(self.password):
+            return True
+
+
+class ValidateProductData:
+    def __init__(self, product_name, unit_price, stock):
+        self.product_name = product_name
+        self.unit_price = unit_price
+        self.stock = stock
+
+    def validate_product_data(self):
+        if not is_string(self.product_name) or not is_integer(self.unit_price) or not is_integer(self.stock) \
+                or not empty_string_catcher(self.product_name) \
+                or check_for_letters(self.product_name):
             return True

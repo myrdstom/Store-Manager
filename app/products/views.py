@@ -1,5 +1,5 @@
 from app.products import apcn_v1
-from app_utils import empty_string_catcher, is_string, is_integer, check_for_letters
+from app_utils import empty_string_catcher, is_string, is_integer, check_for_letters, ValidateProductData
 from flask import request
 from database.models import Product
 from flask_restful import Resource, Api
@@ -37,17 +37,17 @@ class Products(Resource):
                 unit_price = data['unit_price']
                 stock = data['stock']
                 product_name = productname.lower()
-                if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock) \
-                        or not empty_string_catcher(product_name) \
-                        or check_for_letters(product_name):
+                product_data = ValidateProductData(product_name, unit_price, stock)
+                if product_data.validate_product_data():
                     return {"message": "Please review the values added"}, 400
                 if Product.find_product_by_name(product_name):
                     return {'message': 'A product with that product name already exists'}, 409
                 product = Product(product_name, unit_price, stock)
                 product.insert_product()
-                return {'message': 'product created', 'product_name': product_name, 'unit_price':unit_price, 'stock':stock}, 201
+                return {'message': 'product created', 'product_name': product_name,
+                        'unit_price': unit_price, 'stock': stock}, 201
             else:
-                return {'message':'you are not authorized to view this resource'}, 409
+                return {'message': 'you are not authorized to view this resource'}, 409
         except Exception:
             return {'message': 'Something went wrong with your inputs: Please review them'}, 400
 
@@ -63,16 +63,15 @@ class Products(Resource):
                 unit_price = data['unit_price']
                 stock = data['stock']
                 product_name = productname.lower()
-                if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock) \
-                        or not empty_string_catcher(product_name) \
-                        or check_for_letters(product_name):
+                product_data = ValidateProductData(product_name, unit_price, stock)
+                if product_data.validate_product_data():
                     return {"message": "Please review the values added"}, 400
                 product = Product.update_product(product_name, unit_price, stock, product_id)
                 if product is False:
                     return {'message': 'no such entry found'}, 400
                 return product, 201
             else:
-                return {'message':'you are not authorized to view this resource'}, 409
+                return {'message': 'you are not authorized to view this resource'}, 409
         except:
             return {'message': 'Something went wrong with your inputs: Please review them'}, 400
 
@@ -86,7 +85,7 @@ class Products(Resource):
                 return {'message': 'Record successfully deleted'}, 200
             return {'message': 'Product does not exist'}, 400
         else:
-            return {'message':'you are not authorized to view this resource'}, 409
+            return {'message': 'you are not authorized to view this resource'}, 409
 
 
 API.add_resource(Products, '/products', '/products/<int:product_id>')

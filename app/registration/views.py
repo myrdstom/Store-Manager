@@ -1,5 +1,5 @@
 from app.registration import auth_v1
-from app_utils import empty_string_catcher, is_string, ValidUser
+from app_utils import empty_string_catcher, is_string, ValidateUserData
 from flask import request
 from database.models import User
 from flask_restful import Resource, Api
@@ -21,8 +21,8 @@ class Registration(Resource):
             data = request.get_json()
             username = data['username']
             password = generate_password_hash(data['password'], method='sha256')
-            user = ValidUser(username, password)
-            if user.validate_user():
+            user_data = ValidateUserData(username, password)
+            if user_data.validate_user():
                 return {"message": "Please review the values added"}, 400
             if User.get_by_username(username):
                 return {'message': 'A user with that username already exists'}, 409
@@ -41,8 +41,8 @@ class Login(Resource):
         username = data['username']
         password = data['password']
         check_for_user = User.get_by_username(username)
-        user = ValidUser(username, password)
-        if user.validate_user():
+        user_data = ValidateUserData(username, password)
+        if user_data.validate_user():
             return {"message": "Please review the values added"}, 400
         if not check_for_user:
             return {'message': 'The user does not exist, please register'}, 400
