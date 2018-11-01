@@ -34,6 +34,10 @@ To setup,
     ```
     pip install -r requirements.txt   
     ``` 
+    
+ 7. Download and install the postgreSQL database [here](https://www.postgresql.org/download/)
+ 
+ 8. Create two databases ```store_manager_pk```  for the production environment and  ```test_store_manager``` for the test environment
 
 ## Build
 
@@ -48,6 +52,8 @@ To setup,
 |POST /api/v1/login  | Login a new user
 |GET /api/v1/products | Get all products
 |POST /api/v1/products  | Post a new product
+|PUT /api/v1/products/<int:product_id>  | Edit a product
+|DELETE /api/v1/products/<int:product_id>  | Delete a product
 |GET /api/v1/products/<int:product_id> | Return a single product
 |GET /api/v1/sales | Get all sales
 |POST /api/v1/sales  | Post a new sale
@@ -69,7 +75,7 @@ The project has been built with the following technologies so far:
 * CSS
 * Javascript
 * Python/Flask
-
+*postgreSQL
 
 ## Author
 Paul Kayongo
