@@ -14,6 +14,7 @@ API = Api(auth_v1)
 
 class Registration(Resource):
     @jwt_required
+    @swag_from("../docs/signup.yml")
     def post(self):
         role = get_jwt_identity()['role']
         if role == "store-owner":

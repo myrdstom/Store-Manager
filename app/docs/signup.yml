@@ -18,6 +18,6 @@ responses:
         password:
           type: string
           default: password
-    description: You have successfully logged in!
+    description: You have successfully registered!
   400:
     description: Failed to login, please review the credentials added.
