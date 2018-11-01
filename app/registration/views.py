@@ -4,7 +4,7 @@ from flask import request
 from database.models import User
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flasgger import swag_from
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 API = Api(auth_v1)
@@ -33,10 +33,8 @@ class Registration(Resource):
             return {'message': 'you are not authorized to view this resource'}, 409
 
 
-9
-
-
 class Login(Resource):
+    @swag_from("../docs/login.yml")
     def post(self):
         data = request.get_json()
         username = data['username']
