@@ -4,12 +4,14 @@ from flask import request
 from database.models import Product
 from flask_restful import Resource, Api
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flasgger import swag_from
 
 API = Api(apcn_v1)
 
 
 class Products(Resource):
     @jwt_required
+    @swag_from("../docs/get_all_products.yml")
     def get(self, product_id=0):
         """This function returns a list of all products in the inventory or a single product"""
         if (product_id):
@@ -24,6 +26,7 @@ class Products(Resource):
             return product
 
     @jwt_required
+    @swag_from("../docs/post_a_product.yml")
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
         try:
@@ -49,6 +52,7 @@ class Products(Resource):
             return {'message': 'Something went wrong with your inputs: Please review them'}, 400
 
     @jwt_required
+    @swag_from("../docs/edit_a_product.yml")
     def put(self, product_id):
         """This function lets the administrator edit a product"""
         try:
@@ -73,6 +77,7 @@ class Products(Resource):
             return {'message': 'Something went wrong with your inputs: Please review them'}, 400
 
     @jwt_required
+    @swag_from("../docs/delete_a_product.yml")
     def delete(self, product_id):
         """This function lets the administrator delete a product"""
         role = get_jwt_identity()['role']

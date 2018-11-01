@@ -1,0 +1,13 @@
+View  Products
+---
+tags:
+  - Products
+parameters:
+  - in: body
+    name: body
+    required: true
+    type: string
+    description: The user can view all products.
+responses:
+  200:
+    description: There are no products in the database
