@@ -1,5 +1,5 @@
 from app.products import apcn_v1
-from app_utils import empty_string_catcher, is_string, is_integer
+from app_utils import empty_string_catcher, is_string, is_integer, check_for_letters
 from flask import request
 from database.models import Product
 from flask_restful import Resource, Api
@@ -13,15 +13,15 @@ class Products(Resource):
     def get(self, product_id=0):
         """This function returns a list of all products in the inventory or a single product"""
         if (product_id):
-            prod_id = Product.view_single_product(product_id)
-            if not prod_id:
+            product_identity = Product.view_single_product(product_id)
+            if not product_identity:
                 return {'message': 'the product does not exist'}, 200
-            return prod_id
+            return product_identity
         else:
-            prod = Product.view_products()
-            if len(prod) == 0:
+            product = Product.view_products()
+            if len(product) == 0:
                 return {'message': 'There are no values in the database'}, 200
-            return prod
+            return product
 
     @jwt_required
     def post(self):
@@ -30,16 +30,18 @@ class Products(Resource):
             role = get_jwt_identity()['role']
             if role == "store-owner":
                 data = request.get_json()
-                product_name = data['product_name']
+                productname = data['product_name']
                 unit_price = data['unit_price']
                 stock = data['stock']
+                product_name = productname.lower()
                 if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock) \
-                        or not empty_string_catcher(product_name):
+                        or not empty_string_catcher(product_name) \
+                        or check_for_letters(product_name):
                     return {"message": "Please review the values added"}, 400
-                if Product.query_product_name(product_name):
+                if Product.find_product_by_name(product_name):
                     return {'message': 'A product with that product name already exists'}, 409
-                prod = Product(product_name, unit_price, stock)
-                prod.insert_product()
+                product = Product(product_name, unit_price, stock)
+                product.insert_product()
                 return {'message': 'product created', 'product_name': product_name, 'unit_price':unit_price, 'stock':stock}, 201
             else:
                 return {'message':'you are not authorized to view this resource'}, 409
@@ -53,16 +55,18 @@ class Products(Resource):
             role = get_jwt_identity()['role']
             if role == "store-owner":
                 data = request.get_json()
-                product_name = data['product_name']
+                productname = data['product_name']
                 unit_price = data['unit_price']
                 stock = data['stock']
+                product_name = productname.lower()
                 if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock) \
-                        or not empty_string_catcher(product_name):
+                        or not empty_string_catcher(product_name) \
+                        or check_for_letters(product_name):
                     return {"message": "Please review the values added"}, 400
-                prod = Product.update_product(product_name, unit_price, stock, product_id)
-                if prod is False:
+                product = Product.update_product(product_name, unit_price, stock, product_id)
+                if product is False:
                     return {'message': 'no such entry found'}, 400
-                return prod, 201
+                return product, 201
             else:
                 return {'message':'you are not authorized to view this resource'}, 409
         except:

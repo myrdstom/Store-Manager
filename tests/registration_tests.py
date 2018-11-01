@@ -2,12 +2,6 @@ import unittest
 import json
 from tests.base import BaseTestCase
 
-user_data = {
-
-    'username': 'myrdstom',
-    'password': 'password'
-}
-
 
 class FlaskTestCase(BaseTestCase):
     """Users tests"""
