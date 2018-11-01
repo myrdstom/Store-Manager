@@ -1,5 +1,7 @@
 # Store Manager
 [![Maintainability](https://api.codeclimate.com/v1/badges/2715d106d25e7164ae1d/maintainability)](https://codeclimate.com/github/myrdstom/Store-Manager/maintainability)
+[![Build Status](https://travis-ci.org/myrdstom/Store-Manager.svg?branch=challenge-3)](https://travis-ci.org/myrdstom/Store-Manager)
+
 
 Store Manager is a web application that helps store owners manage sales and product inventory records. 
 This application is meant for use in a single store.
