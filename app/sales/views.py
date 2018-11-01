@@ -28,35 +28,38 @@ class Sales(Resource):
     @jwt_required
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
-        current_user = get_jwt_identity()['username']
-        role = get_jwt_identity()['role']
-        if role == "shop-attendant":
-            data = request.get_json()
-            productname = data['product_name']
-            username = current_user
-            quantity = data['quantity']
-            product_name = productname.lower()
-            if not is_integer(quantity) or not is_string(product_name) or not empty_string_catcher(product_name) or \
-                    check_for_letters(product_name)or quantity < 0:
-                return {'message': 'Error:Invalid value added, please review'}, 400
-            product_identity = Product.view_single_product_by_name(product_name)
-            if product_identity:
-                available_stock = product_identity['stock']
-                unit_price = product_identity['unitprice']
-                product_name = product_identity['product_name']
-                total = data['quantity'] * unit_price
-                if available_stock < quantity:
-                    return {'message':'not enough in stock for you to purchase that amount'}, 400
-                stock = available_stock - quantity
+        try:
+            current_user = get_jwt_identity()['username']
+            role = get_jwt_identity()['role']
+            if role == "shop-attendant":
+                data = request.get_json()
+                productname = data['product_name']
+                username = current_user
+                quantity = data['quantity']
+                product_name = productname.lower()
+                if not is_integer(quantity) or not is_string(product_name) or not empty_string_catcher(product_name) or \
+                        check_for_letters(product_name)or quantity < 0:
+                    return {'message': 'Error:Invalid value added, please review'}, 400
+                product_identity = Product.view_single_product_by_name(product_name)
+                if product_identity:
+                    available_stock = product_identity['stock']
+                    unit_price = product_identity['unitprice']
+                    product_name = product_identity['product_name']
+                    total = data['quantity'] * unit_price
+                    if available_stock < quantity:
+                        return {'message':'not enough in stock for you to purchase that amount'}, 400
+                    stock = available_stock - quantity
+                else:
+                    return {'message': 'Product does not exist'}, 400
+                Sale.update_stock(stock, product_name)
+                sale_items = Sale(username=username, product_name=product_name, quantity=quantity,
+                                  total=total)
+                sale_items.insert_sale()
+                return {'message': 'sale created'}, 201
             else:
-                return {'message': 'Product does not exist'}, 400
-            Sale.update_stock(stock, product_name)
-            sale_items = Sale(username=username, product_name=product_name, quantity=quantity,
-                              total=total)
-            sale_items.insert_sale()
-            return {'message': 'sale created'}, 201
-        else:
-            return {'message': 'you are not authorized to view this resource'}, 409
+                return {'message': 'you are not authorized to view this resource'}, 409
+        except Exception:
+            return {'message': 'Something went wrong with your inputs: Please review them'}, 400
 
 
 API.add_resource(Sales, '/sales', '/sales/<int:sale_id>')
