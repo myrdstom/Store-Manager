@@ -46,6 +46,8 @@ class Sales(Resource):
             unit_price = prod_id['unitprice']
             product_name = prod_id['product_name']
             total = data['quantity'] * unit_price
+            if available_stock < quantity:
+                return {'message':'not enough in stock for you to purchase that amount'}, 400
             stock = available_stock - quantity
             prod = Sale.update_stock(stock, product_name)
             sale_items = Sale(username=username, product_name=product_name, quantity=quantity,
