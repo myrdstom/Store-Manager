@@ -2,11 +2,11 @@ import unittest
 import json
 from tests.base import BaseTestCase
 
-product_data = dict(product_name="Acer",
+product_data = dict(product_name="acer",
                     unit_price=19000000,
                     stock=100)
 
-sale_data = dict(product_name="Acer",
+sale_data = dict(product_name="acer",
                  quantity=32)
 
 empty_product_data = {}
@@ -108,7 +108,7 @@ class FlaskTestCase(BaseTestCase):
                                   data=json.dumps(product_data))
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            self.assertIn("Acer", response_json[0]['product_name'])
+            self.assertIn("acer", response_json[0]['product_name'])
 
     """test empty product data"""
 
@@ -239,7 +239,7 @@ class FlaskTestCase(BaseTestCase):
                                  data=json.dumps(sale_data))
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            self.assertIn("Acer", response_json[0]['product_name'])
+            self.assertIn("acer", response_json[0]['product_name'])
 
     """testing  GET a single sale"""
 
@@ -268,7 +268,7 @@ class FlaskTestCase(BaseTestCase):
                                   data=json.dumps(sale_data))
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            self.assertIn("Acer", response_json['product_name'])
+            self.assertIn("acer", response_json['product_name'])
 #     #
     """testing adding a sale"""
 
