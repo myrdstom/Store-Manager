@@ -1,10 +1,8 @@
 from app.sales import apsn_v1
 from app_utils import empty_string_catcher, is_integer, is_string
-from flask import request, current_app as app, jsonify
+from flask import request
 from database.models import Sale, Product
-from database.db import DBHandler
 from flask_restful import Resource, Api
-from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -37,7 +35,7 @@ class Sales(Resource):
             product_name = data['product_name']
             username = current_user
             quantity = data['quantity']
-            if not is_integer(quantity) or not is_string(product_name):
+            if not is_integer(quantity) or not is_string(product_name) or not empty_string_catcher(product_name):
                 return {'message': 'Error:Invalid value added, please review'}, 400
             prod_id = Product.view_single_product_by_name(product_name)
             if not prod_id:

@@ -26,41 +26,47 @@ class Products(Resource):
     @jwt_required
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
-        role = get_jwt_identity()['role']
-        if role == "store-owner":
-            data = request.get_json()
-            product_name = data['product_name']
-            unit_price = data['unit_price']
-            stock = data['stock']
-            if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock) \
-                    or not empty_string_catcher(product_name):
-                return {"message": "Please review the values added"}, 400
-            if Product.query_product_name(product_name):
-                return {'message': 'A product with that product name already exists'}, 409
-            prod = Product(product_name, unit_price, stock)
-            prod.insert_product()
-            return {'message': 'product created', 'product_name': product_name, 'unit_price':unit_price, 'stock':stock}, 201
-        else:
-            return {'message':'you are not authorized to view this resource'}, 409
+        try:
+            role = get_jwt_identity()['role']
+            if role == "store-owner":
+                data = request.get_json()
+                product_name = data['product_name']
+                unit_price = data['unit_price']
+                stock = data['stock']
+                if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock) \
+                        or not empty_string_catcher(product_name):
+                    return {"message": "Please review the values added"}, 400
+                if Product.query_product_name(product_name):
+                    return {'message': 'A product with that product name already exists'}, 409
+                prod = Product(product_name, unit_price, stock)
+                prod.insert_product()
+                return {'message': 'product created', 'product_name': product_name, 'unit_price':unit_price, 'stock':stock}, 201
+            else:
+                return {'message':'you are not authorized to view this resource'}, 409
+        except Exception:
+            return {'message': 'Something went wrong with your inputs: Please review them'}, 400
 
     @jwt_required
     def put(self, product_id):
         """This function lets the administrator edit a product"""
-        role = get_jwt_identity()['role']
-        if role == "store-owner":
-            data = request.get_json()
-            product_name = data['product_name']
-            unit_price = data['unit_price']
-            stock = data['stock']
-            if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock) \
-                    or not empty_string_catcher(product_name):
-                return {"message": "Please review the values added"}, 400
-            prod = Product.update_product(product_name, unit_price, stock, product_id)
-            if prod is False:
-                return {'message': 'no such entry found'}, 400
-            return prod, 201
-        else:
-            return {'message':'you are not authorized to view this resource'}, 409
+        try:
+            role = get_jwt_identity()['role']
+            if role == "store-owner":
+                data = request.get_json()
+                product_name = data['product_name']
+                unit_price = data['unit_price']
+                stock = data['stock']
+                if not is_string(product_name) or not is_integer(unit_price) or not is_integer(stock) \
+                        or not empty_string_catcher(product_name):
+                    return {"message": "Please review the values added"}, 400
+                prod = Product.update_product(product_name, unit_price, stock, product_id)
+                if prod is False:
+                    return {'message': 'no such entry found'}, 400
+                return prod, 201
+            else:
+                return {'message':'you are not authorized to view this resource'}, 409
+        except:
+            return {'message': 'Something went wrong with your inputs: Please review them'}, 400
 
     @jwt_required
     def delete(self, product_id):
