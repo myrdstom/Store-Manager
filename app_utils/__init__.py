@@ -1,6 +1,5 @@
 import re
-
-
+import string
 
 def empty_string_catcher(value):
     value = ' '.join(value.split())
@@ -8,11 +7,6 @@ def empty_string_catcher(value):
         return False
     return True
 
-
-def email_validator(value):
-    if re.match(r"[a-zA-z0-9]+@[a-z]+\.[a-z]+", value):
-        return True
-    return False
 
 def is_Bool(value):
     if isinstance(value,bool):
@@ -34,4 +28,11 @@ def is_space(value):
         return True
     return False
 
-    #num < 0 and num.is_integer()
+def check_for_letters(value):
+    response = ""
+    for letter in value:
+        if letter in string.punctuation:
+            response += letter
+    if response:
+        return True
+    return False

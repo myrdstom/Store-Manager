@@ -21,12 +21,10 @@ class User:
     def get_by_username(username):
         """Method to retrieve a username from the database"""
         user = DatabaseUrl.database_url().fetch_by_param('users', 'username', username)
-        # response = dict()
-
         if user is None:
             return False
         else:
-            return {"user_id": user[0], "username": user[1], "password": user[2], "role": user[3]}
+            return dict(user_id=user[0], username=user[1], password=user[2], role=user[3])
 
     def insert_user(self):
         user = DatabaseUrl.database_url().create_user(self.username, self.password, self.role)
@@ -51,6 +49,14 @@ class Product:
         else:
             return response
 
+    def view_single_product(product_id):
+        product = DatabaseUrl.database_url().fetch_by_param('products', 'product_id', product_id)
+
+        if product is None:
+            return {}
+        else:
+            return dict(product_id=product[0], product_name=product[1], unitprice=product[2], stock=product[3])
+
     @staticmethod
     def update_product(product_name, unit_price, stock, product_id):
         response = DatabaseUrl.database_url().modify_products(product_name, unit_price, stock, product_id)
@@ -60,7 +66,7 @@ class Product:
         else:
             return response
 
-    def query_product_name(product_name):
+    def find_product_by_name(product_name):
         """Method to retrieve a username from the database"""
         response = DatabaseUrl.database_url().fetch_by_param('products', 'product_name', product_name)
 
@@ -73,35 +79,17 @@ class Product:
         response = DatabaseUrl.database_url().view_all_products()
         return response
 
-    def view_single_product(product_id):
-        response = DatabaseUrl.database_url().fetch_by_param('products', 'product_id', product_id)
-
-        if response is None:
-            return {}
-        else:
-            return {
-                'product_id': response[0],
-                'product_name': response[1],
-                'unitprice': response[2],
-                'stock': response[3]
-            }
-
     def view_single_product_by_name(product_name):
-        response = DatabaseUrl.database_url().fetch_by_param('products', 'product_name', product_name)
+        product = DatabaseUrl.database_url().fetch_by_param('products', 'product_name', product_name)
 
-        if response is None:
+        if product is None:
             return {}
         else:
-            return {
-                'product_id': response[0],
-                'product_name': response[1],
-                'unitprice': response[2],
-                'stock': response[3]
-            }
+            return dict(product_id=product[0], product_name=product[1], unitprice=product[2], stock=product[3])
 
     def delete_single_product(product_id):
-        resp = DatabaseUrl.database_url().fetch_by_param('products', 'product_id', product_id)
-        if resp:
+        product = DatabaseUrl.database_url().fetch_by_param('products', 'product_id', product_id)
+        if product:
             DatabaseUrl.database_url().delete_by_param('products', 'product_id', product_id)
             return True
         else:
@@ -115,9 +103,9 @@ class Sale:
         self.quantity = kwargs.get('quantity')
         self.total = kwargs.get('total')
 
-
     def insert_sale(self):
-        sale_response = DatabaseUrl.database_url().create_sale(self.username, self.product_name, self.quantity, self.total)
+        sale_response = DatabaseUrl.database_url().create_sale(self.username, self.product_name, self.quantity,
+                                                               self.total)
 
         if sale_response is None:
             return False
@@ -129,24 +117,20 @@ class Sale:
         return response
 
     def view_single_sale(sale_id):
-        sale_response = DatabaseUrl.database_url().fetch_by_param('sales', 'sale_id', sale_id)
+        response = DatabaseUrl.database_url().fetch_by_param('sales', 'sale_id', sale_id)
+        sale = dict(sale_id=response[0], username=response[1], product_name=response[2], quantity=response[3],
+                    total=response[4])
 
-        if sale_response is None:
+        if sale is None:
             return False
         else:
-            return {
-                'sale_id': sale_response[0],
-                'username': sale_response[1],
-                'product_name': sale_response[2],
-                'quantity': sale_response[3],
-                'total': sale_response[4]
-            }
+            return sale
 
     @staticmethod
     def update_stock(stock, product_id):
-        response = DatabaseUrl.database_url().modify_stock(stock, product_id)
+        product = DatabaseUrl.database_url().modify_stock(stock, product_id)
 
-        if response is None:
+        if product is None:
             return False
         else:
-            return response
+            return product

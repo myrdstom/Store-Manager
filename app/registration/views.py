@@ -43,13 +43,13 @@ class Login(Resource):
         if not is_string(username) or not is_string(password) \
                 or not empty_string_catcher(username) or not empty_string_catcher(password):
             return {"message": "Please review the values added"}, 400
-        query = User.get_by_username(username)
-        if not query:
+        check_for_user = User.get_by_username(username)
+        if not check_for_user:
             return {'message': 'The user does not exist, please register'}, 400
-        if not check_password_hash(query['password'], password):
+        if not check_password_hash(check_for_user['password'], password):
             return {'message': 'Error: wrong password'}, 400
 
-        access_token = create_access_token(identity=query)
+        access_token = create_access_token(identity=check_for_user)
         return {'access_token': access_token}, 200
 
 
