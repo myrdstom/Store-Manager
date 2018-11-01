@@ -1,5 +1,6 @@
 Registration
 ---
+
 tags:
   - User Authentication
 parameters:
@@ -23,11 +24,3 @@ responses:
     description: Failed to login, please review the credentials added.
   400:
     description: Failed to login, please review the credentials added.
-  security:
-  - JWT:
-      description: Pass in jwt token. i.e Bearer <jwt>
-      type: apiKey
-      scheme: bearer
-      name: Authorization
-      in: header
-      bearerFormat: JWT

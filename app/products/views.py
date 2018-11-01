@@ -1,5 +1,5 @@
 from app.products import apcn_v1
-from app_utils import empty_string_catcher, is_string, is_integer, check_for_letters, ValidateProductData
+from app_utils import ValidateProductData
 from flask import request
 from database.models import Product
 from flask_restful import Resource, Api

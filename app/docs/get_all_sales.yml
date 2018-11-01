@@ -1,0 +1,10 @@
+Sales
+---
+tags:
+  - Sales
+parameters:
+  - in: body
+    name: body
+    required: true
+    type: string
+    description: Every logged in user can view a sale.

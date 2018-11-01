@@ -13,6 +13,7 @@ class Sales(Resource):
     """This function returns a list of all products in the inventory"""
 
     @jwt_required
+    @swag_from("../docs/get_all_sales.yml")
     def get(self, sale_id=0):
         if (sale_id):
             sal_id = Sale.view_single_sale(sale_id)
@@ -26,6 +27,7 @@ class Sales(Resource):
             return sal
 
     @jwt_required
+    @swag_from("../docs/post_a_sale.yml")
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
         try:

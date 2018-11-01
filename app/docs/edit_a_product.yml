@@ -7,20 +7,5 @@ parameters:
     name: body
     required: true
     type: string
-    description: The user can view all products.
-responses:
-  201:
-    schema:
-      properties:
-        product_name:
-          type: string
-          default: acer
-        password:
-          type: string
-          default: password
-    description: You have successfully logged in!
-  400:
-    description: Failed to login, please review the credentials added.
-  409:
-    description: You are not authorized to view this resource.
+    description: The admin user can edit a products.
 
