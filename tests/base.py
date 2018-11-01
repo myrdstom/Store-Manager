@@ -50,6 +50,7 @@ class BaseTestCase(unittest.TestCase):
                                                          password="password")))
         return response
 
+
     def create_second_user(self):
         response = self.client.post("api/v1/signup", content_type='application/json',
                                     data=json.dumps(dict(username="bgpeter",
@@ -63,16 +64,18 @@ class BaseTestCase(unittest.TestCase):
         return login_result
 
     def login_user(self):
+        self.client.post("api/v1/signup",
+                         headers={'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' +
+                                                   self.admin_login()[
+                                                       'access_token']},
+                         data=json.dumps(dict(username="myrdstom",
+                                              password="password")))
         login_response = self.client.post('api/v1/login', content_type='application/json',
                                           data=json.dumps(self.user_data))
         login_result = json.loads(login_response.data.decode())
         return login_result
 
-    def login_user2(self):
-        login_response = self.client.post('api/v1/login', content_type='application/json',
-                                          data=json.dumps(self.user_data2))
-        login_result = json.loads(login_response.data.decode())
-        return login_result
 
     def tearDown(self):
         handler = DBHandler(app.config['DATABASE_URL'])

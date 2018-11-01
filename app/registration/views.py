@@ -1,5 +1,5 @@
 from app.registration import auth_v1
-from app_utils import empty_string_catcher, is_space, is_string
+from app_utils import empty_string_catcher, is_string
 from flask import request
 from database.models import User
 from flask_restful import Resource, Api

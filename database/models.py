@@ -89,7 +89,7 @@ class Product:
                 'stock': response[3]
             }
 
-    def view_single_product(product_name):
+    def view_single_product_by_name(product_name):
         response = Product.database_url().fetch_by_param('products', 'product_name', product_name)
 
         if response is None:

@@ -51,6 +51,20 @@ class FlaskTestCase(BaseTestCase):
             self.assertEqual(response.status_code, 201)
             self.assertIn(b'User successfully registered', response.data)
 
+
+    """Test authority to signup a user"""
+
+    def test_missing_values(self):
+        with self.app.test_client() as client:
+            response = client.post("/api/v1/signup", headers={'Content-Type': 'application/json',
+                                                              'Authorization': 'Bearer ' +
+                                                                               self.login_user()[
+                                                                                   'access_token']},
+                                   data=json.dumps(dict(username="  ",
+                                                        password="password")))
+            self.assertEqual(response.status_code, 409)
+            self.assertIn('you are not authorized to view this resource', responseJson['message'])
+
     """Testing for missing values when signing up"""
 
     def test_missing_values(self):

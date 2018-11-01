@@ -1,54 +1,66 @@
 import psycopg2
 from urllib.parse import urlparse
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class DBHandler:
     def __init__(self, database_url):
-        parsed_url = urlparse(database_url)
-        dbname = parsed_url.path[1:]
-        username = parsed_url.username
-        hostname = parsed_url.hostname
-        password = parsed_url.password
-        port = parsed_url.port
-        self.conn = psycopg2.connect(
-            database=dbname,
-            user=username,
-            password=password,
-            host=hostname,
-            port=port)
-        self.conn.autocommit = True
-        self.cur = self.conn.cursor()
+        try:
+            parsed_url = urlparse(database_url)
+            dbname = parsed_url.path[1:]
+            username = parsed_url.username
+            hostname = parsed_url.hostname
+            password = parsed_url.password
+            port = parsed_url.port
+            self.conn = psycopg2.connect(
+                database=dbname,
+                user=username,
+                password=password,
+                host=hostname,
+                port=port)
+            self.conn.autocommit = True
+            self.cur = self.conn.cursor()
+            print("Successfully connected to the database")
+        except Exception:
+            print("failed to connect")
 
     '''Create tables'''
 
     def create_user_table(self):
-        statement = "CREATE TABLE IF NOT EXISTS users (" \
-                    "userId SERIAL PRIMARY KEY , " \
-                    "username varchar NOT NULL UNIQUE, " \
-                    "password varchar NOT NULL, " \
-                    "role varchar NOT NULL); " \
-                    "INSERT INTO users(username, password, role) " \
-                    "SELECT 'admin', 'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0', " \
-                    "'store-owner' WHERE NOT EXISTS (SELECT * FROM users WHERE username='admin');"
-        self.cur.execute(statement)
+        try:
+            statement = "CREATE TABLE IF NOT EXISTS users (" \
+                        "userId SERIAL PRIMARY KEY , " \
+                        "username varchar NOT NULL UNIQUE, " \
+                        "password varchar NOT NULL, " \
+                        "role varchar NOT NULL); " \
+                        "INSERT INTO users(username, password, role) " \
+                        "SELECT 'admin', 'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0', " \
+                        "'store-owner' WHERE NOT EXISTS (SELECT * FROM users WHERE username='admin');"
+            self.cur.execute(statement)
+        except Exception:
+            print("failed to create user table")
 
     def create_products_table(self):
-        statement = "CREATE TABLE IF NOT EXISTS products (" \
-                    "product_id SERIAL PRIMARY KEY , " \
-                    "product_name varchar NOT NULL, " \
-                    "unit_price INT NOT NULL, " \
-                    "stock INT NOT NULL)"
-        self.cur.execute(statement)
+        try:
+            statement = "CREATE TABLE IF NOT EXISTS products (" \
+                        "product_id SERIAL PRIMARY KEY , " \
+                        "product_name varchar NOT NULL, " \
+                        "unit_price INT NOT NULL, " \
+                        "stock INT NOT NULL)"
+            self.cur.execute(statement)
+        except Exception:
+            print("failed to create products table")
 
     def create_sales_table(self):
-        statement = "CREATE TABLE IF NOT EXISTS sales (" \
-                    "sale_id SERIAL PRIMARY KEY , " \
-                    "username varchar NOT NULL, " \
-                    "product_name varchar NOT NULL, " \
-                    "quantity INT NOT NULL, " \
-                    "total INT NOT NULL)"
-        self.cur.execute(statement)
+        try:
+            statement = "CREATE TABLE IF NOT EXISTS sales (" \
+                        "sale_id SERIAL PRIMARY KEY , " \
+                        "username varchar NOT NULL, " \
+                        "product_name varchar NOT NULL, " \
+                        "quantity INT NOT NULL, " \
+                        "total INT NOT NULL)"
+            self.cur.execute(statement)
+        except Exception:
+            print("failed to create sales table")
 
     '''Functions to handle users and authentication'''
 
