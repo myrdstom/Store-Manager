@@ -25,7 +25,7 @@ class DBHandler:
 
     '''Create tables'''
 
-    def create_user_table(self):
+    def create_tables(self):
         try:
             statement = "CREATE TABLE IF NOT EXISTS users (" \
                         "userId SERIAL PRIMARY KEY , " \
@@ -36,34 +36,37 @@ class DBHandler:
                         "SELECT 'admin', 'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0', " \
                         "'store-owner' WHERE NOT EXISTS (SELECT * FROM users WHERE username='admin');"
             self.cur.execute(statement)
-        except Exception:
-            print("failed to create user table")
-            self.conn.rollback()
 
-    def create_products_table(self):
-        try:
-            statement = "CREATE TABLE IF NOT EXISTS products (" \
+            statement2 = "CREATE TABLE IF NOT EXISTS products (" \
                         "product_id SERIAL PRIMARY KEY , " \
                         "product_name varchar NOT NULL, " \
                         "unit_price INT NOT NULL, " \
                         "stock INT NOT NULL)"
-            self.cur.execute(statement)
-        except Exception:
-            print("failed to create products table")
-            self.conn.rollback()
-
-    def create_sales_table(self):
-        try:
-            statement = "CREATE TABLE IF NOT EXISTS sales (" \
+            self.cur.execute(statement2)
+            statement3 = "CREATE TABLE IF NOT EXISTS sales (" \
                         "sale_id SERIAL PRIMARY KEY , " \
                         "username varchar NOT NULL, " \
                         "product_name varchar NOT NULL, " \
                         "quantity INT NOT NULL, " \
                         "total INT NOT NULL)"
-            self.cur.execute(statement)
+            self.cur.execute(statement3)
         except Exception:
-            print("failed to create sales table")
+            print("failed to create user table")
             self.conn.rollback()
+    #
+    # def create_products_table(self):
+    #     try:
+    #
+    #     except Exception:
+    #         print("failed to create products table")
+    #         self.conn.rollback()
+    #
+    # def create_sales_table(self):
+    #     try:
+    #
+    #     except Exception:
+    #         print("failed to create sales table")
+    #         self.conn.rollback()
 
     '''Functions to handle users and authentication'''
 

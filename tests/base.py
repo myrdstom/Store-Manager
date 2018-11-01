@@ -20,9 +20,7 @@ class BaseTestCase(unittest.TestCase):
         self.app.app_context().push()
         self.client = self.app.test_client()
         handler = DBHandler(app.config['DATABASE_URL'])
-        handler.create_user_table()
-        handler.create_products_table()
-        handler.create_sales_table()
+        handler.create_tables()
 
         self.admin_user = {
             'username': 'admin',
