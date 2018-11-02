@@ -71,6 +71,7 @@ To setup,
 
 ## Deployment
 The Python application is hosted on [Heroku](https://store-manager-heroku.herokuapp.com/)
+
 The application is documented on [Swagger](https://store-manager-heroku.herokuapp.com/apidocs/#/)
 
 ##Built with
