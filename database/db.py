@@ -53,20 +53,6 @@ class DBHandler:
         except Exception:
             print("failed to create user table")
             self.conn.rollback()
-    #
-    # def create_products_table(self):
-    #     try:
-    #
-    #     except Exception:
-    #         print("failed to create products table")
-    #         self.conn.rollback()
-    #
-    # def create_sales_table(self):
-    #     try:
-    #
-    #     except Exception:
-    #         print("failed to create sales table")
-    #         self.conn.rollback()
 
     '''Functions to handle users and authentication'''
 

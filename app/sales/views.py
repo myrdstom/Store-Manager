@@ -27,7 +27,6 @@ class Sales(Resource):
             return sal
 
     @jwt_required
-    @swag_from("../docs/post_a_sale.yml")
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
         try:

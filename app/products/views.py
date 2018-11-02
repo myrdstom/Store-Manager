@@ -26,7 +26,6 @@ class Products(Resource):
             return product
 
     @jwt_required
-    @swag_from("../docs/post_a_product.yml")
     def post(self):
         """This function lets the administrator add a new product to the inventory"""
         try:
@@ -52,7 +51,6 @@ class Products(Resource):
             return {'message': 'Something went wrong with your inputs: Please review them'}, 400
 
     @jwt_required
-    @swag_from("../docs/edit_a_product.yml")
     def put(self, product_id):
         """This function lets the administrator edit a product"""
         try:
@@ -76,7 +74,6 @@ class Products(Resource):
             return {'message': 'Something went wrong with your inputs: Please review them'}, 400
 
     @jwt_required
-    @swag_from("../docs/delete_a_product.yml")
     def delete(self, product_id):
         """This function lets the administrator delete a product"""
         role = get_jwt_identity()['role']
