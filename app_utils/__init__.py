@@ -50,7 +50,8 @@ class ValidateUserData:
 
     def validate_user(self):
         if not is_string(self.username) or not is_string(self.password) \
-                or not empty_string_catcher(self.username) or not empty_string_catcher(self.password):
+                or not empty_string_catcher(self.username) or not empty_string_catcher(self.password)\
+                or not self.username.isalpha():
             return True
 
 
