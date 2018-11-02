@@ -78,7 +78,8 @@ The project has been built with the following technologies so far:
 * CSS
 * Javascript
 * Python/Flask
-*postgreSQL
+* postgreSQL
+* Swagger
 
 ## Author
 Paul Kayongo
