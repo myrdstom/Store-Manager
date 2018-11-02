@@ -2,7 +2,6 @@ View  Products
 ---
 tags:
   - Products
-summary: Add a new question
 parameters:
   - in: body
     name: body
