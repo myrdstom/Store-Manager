@@ -2,12 +2,24 @@ View  Products
 ---
 tags:
   - Products
+summary: Add a new question
 parameters:
   - in: body
     name: body
     required: true
     type: string
-    description: The user can view all products.
+    description: The signed in user can view products.
 responses:
   200:
+    schema:
+      properties:
+        product_name:
+          type: string
+        unit_price:
+          type: integer
+        stock:
+          type: integer
     description: There are no products in the database
+  401:
+    description: Missing Authorization Header
+
