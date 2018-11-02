@@ -7,7 +7,7 @@
 Store Manager is a web application that helps store owners manage sales and product inventory records. 
 This application is meant for use in a single store.
 
-##Pre-requisites
+## Pre-requisites
 The UI pages are static for now and have no functionality however they can be viewed [here](https://myrdstom.github.io/Store-Manager/)
 
 ## Setup
