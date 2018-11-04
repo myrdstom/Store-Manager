@@ -303,7 +303,34 @@ class FlaskTestCase(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn("acer", response_json['product_name'])
 
-    #     #
+    """Test sale does not exist"""
+
+    def test_sale_does_not_exist(self):
+        with self.app.test_client() as client:
+            response = client.get("/api/v1/sales/100",
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(sale_data))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('Sale does not exist', response_json['message'])
+
+    """Test empty database"""
+
+    def test_empty_database(self):
+        with self.app.test_client() as client:
+            response = client.get("/api/v1/sales",
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(sale_data))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('There are no values in the database', response_json['message'])
+
     """testing adding a sale"""
 
     def test_add_a_sale(self):

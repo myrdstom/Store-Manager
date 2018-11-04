@@ -17,7 +17,7 @@ class Sales(Resource):
     def get(self, sale_id=0):
         if (sale_id):
             sal_id = Sale.view_single_sale(sale_id)
-            if sal_id is False:
+            if not sal_id:
                 return {'message': 'Sale does not exist'}
             return sal_id
         else:

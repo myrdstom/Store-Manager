@@ -116,13 +116,12 @@ class Sale:
 
     def view_single_sale(sale_id):
         response = DatabaseUrl.database_url().fetch_by_param('sales', 'sale_id', sale_id)
-        sale = dict(sale_id=response[0], username=response[1], product_name=response[2], quantity=response[3],
-                    total=response[4])
 
-        if sale is None:
-            return {}
+        if response is None:
+            return False
         else:
-            return sale
+            return dict(sale_id=response[0], username=response[1], product_name=response[2], quantity=response[3],
+                    total=response[4])
 
     @staticmethod
     def update_stock(stock, product_id):
