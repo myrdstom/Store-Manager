@@ -65,7 +65,7 @@ class Products(Resource):
                 if product_data.validate_product_data():
                     return {"message": "Please review the values added"}, 400
                 product = Product.update_product(product_name, unit_price, stock, product_id)
-                if product is False:
+                if len(product) == 0:
                     return {'message': 'no such entry found'}, 400
                 return product, 201
             else:
@@ -80,7 +80,7 @@ class Products(Resource):
         if role == "store-owner":
             if Product.delete_single_product(product_id):
                 return {'message': 'Record successfully deleted'}, 200
-            return {'message': 'Product does not exist'}, 400
+            return {'message': 'Product does not exist'}, 200
         else:
             return {'message': 'you are not authorized to view this resource'}, 409
 
