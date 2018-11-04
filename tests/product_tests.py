@@ -226,7 +226,8 @@ class FlaskTestCase(BaseTestCase):
             responseJson = json.loads(response.data.decode())
             self.assertIn("water", responseJson['product_name'])
 
-    def test_delete_a_product(self):
+    """Test deleting non-existing record"""
+    def test_delete_a_non_existent_product(self):
         with self.app.test_client() as client:
             response = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
                                                                 'Authorization': 'Bearer ' +
@@ -244,6 +245,41 @@ class FlaskTestCase(BaseTestCase):
             self.assertEqual(response.status_code, 400)
             responseJson = json.loads(response.data.decode())
             self.assertIn('Product does not exist', responseJson['message'])
+
+
+    """Testing successfully deleting a product"""
+    """Test deleting non-existing record"""
+
+    def test_delete_a_product(self):
+        with self.app.test_client() as client:
+            response = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                'Authorization': 'Bearer ' +
+                                                                                 self.admin_login()[
+                                                                                     'access_token']},
+                                   data=json.dumps(product_data))
+            self.assertEqual(response.status_code, 201)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('product created', responseJson['message'])
+            response = client.delete('/api/v1/products/1',
+                                     headers={'Content-Type': 'application/json',
+                                              'Authorization': 'Bearer ' +
+                                                               self.admin_login()[
+                                                                   'access_token']})
+            self.assertEqual(response.status_code, 200)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('Record successfully deleted', responseJson['message'])
+
+    """Test the authority to delete an item"""
+    def test_authority_to_delete(self):
+        with self.app.test_client() as client:
+            response = client.delete('/api/v1/products/10',
+                                     headers={'Content-Type': 'application/json',
+                                              'Authorization': 'Bearer ' +
+                                                               self.login_user()[
+                                                                   'access_token']})
+            self.assertEqual(response.status_code, 409)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
     """Sales tests"""
 
