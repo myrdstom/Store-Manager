@@ -542,5 +542,29 @@ class FlaskTestCase(BaseTestCase):
             self.assertEqual(response.status_code, 400)
             self.assertIn('not enough in stock for you to purchase that amount', response_json['message'])
 
+
+    """Test invalid data types"""
+    """Test limited stock"""
+    def test_invalid_stock_data_types(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products',
+                                    headers={'Content-Type': 'application/json',
+                                             'Authorization': 'Bearer ' +
+                                                              self.admin_login()[
+                                                                  'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.post("/api/v1/sales",
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.login_user()[
+                                                                 'access_token']},
+                                   data=json.dumps(dict(product_name="acer",
+                                                        quantity="340")))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Error:Invalid value added, please review', response_json['message'])
+
+
     if __name__ == '__main__':
         unittest.main()
