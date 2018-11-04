@@ -384,5 +384,42 @@ class FlaskTestCase(BaseTestCase):
             responseJson = json.loads(response.data.decode())
             self.assertIn('Something went wrong with your inputs: Please review them', responseJson['message'])
 
+    """Test wrong data type for sale endpoint"""
+
+    def test_wrong_data_type_for_sale(self):
+        with self.app.test_client() as client:
+            response = client.post("/api/v1/sales",
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.login_user()[
+                                                                 'access_token']},
+                                   data=json.dumps(dict(product_name="acer",
+                                                        quantity=32)))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Product does not exist', response_json['message'])
+
+
+    """Test limited stock"""
+    def test_not_enough_stock(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products',
+                                    headers={'Content-Type': 'application/json',
+                                             'Authorization': 'Bearer ' +
+                                                              self.admin_login()[
+                                                                  'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.post("/api/v1/sales",
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.login_user()[
+                                                                 'access_token']},
+                                   data=json.dumps(dict(product_name="acer",
+                                                        quantity=320)))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('not enough in stock for you to purchase that amount', response_json['message'])
+
     if __name__ == '__main__':
         unittest.main()
