@@ -1,7 +1,5 @@
 from database.db import DBHandler
 from flask import current_app as app
-import re
-from werkzeug.security import check_password_hash
 
 
 class DatabaseUrl:

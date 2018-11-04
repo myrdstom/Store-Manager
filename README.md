@@ -66,7 +66,7 @@ To setup,
 
 1. pip install nose
 
-2. Run ```nosetests --with-coverage --cover-package=app``` to run all tests with coverage
+2. Run ```nosetests --with-coverage --cover-package=modules.app``` to run all tests with coverage
 
 
 ## Deployment

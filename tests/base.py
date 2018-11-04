@@ -1,10 +1,9 @@
 import unittest
 import json
-from flask_jwt_extended import JWTManager
-from Instance.config import TestingConfig
+from modules.Instance.config import TestingConfig
 from database.db import DBHandler
 from flask import current_app as app
-from app import create_app
+from modules.app import create_app
 
 
 class BaseTestCase(unittest.TestCase):
