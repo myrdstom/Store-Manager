@@ -48,15 +48,24 @@ class FlaskTestCase(BaseTestCase):
 
     """Test authority to signup a user"""
 
-    def test_missing_values(self):
+    def test_authority_to_access_user_registration(self):
         with self.app.test_client() as client:
             response = client.post("/api/v1/signup", headers={'Content-Type': 'application/json',
+                                                              'Authorization': 'Bearer ' +
+                                                                               self.admin_login()[
+                                                                                   'access_token']},
+                                   data=json.dumps(dict(username="myrdstom",
+                                                        password="password")))
+            self.assertEqual(response.status_code, 201)
+            self.assertIn(b'User successfully registered', response.data)
+            response2 = client.post("/api/v1/signup", headers={'Content-Type': 'application/json',
                                                               'Authorization': 'Bearer ' +
                                                                                self.login_user()[
                                                                                    'access_token']},
                                    data=json.dumps(dict(username="  ",
                                                         password="password")))
-            self.assertEqual(response.status_code, 409)
+            self.assertEqual(response2.status_code, 409)
+            responseJson = json.loads(response2.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
 
@@ -104,6 +113,16 @@ class FlaskTestCase(BaseTestCase):
                                                         password="password")))
             self.assertEqual(response.status_code, 400)
             self.assertIn(b'The user does not exist, please register', response.data)
+
+    """Testing incorrect password"""
+
+    def test_invalid_password(self):
+        with self.app.test_client() as client:
+            response = client.post("/api/v1/login", content_type='application/json',
+                                   data=json.dumps(dict(username="admin",
+                                                        password="password2")))
+            self.assertEqual(response.status_code, 400)
+            self.assertIn(b'Error: wrong password', response.data)
 
 
 if __name__ == '__main__':

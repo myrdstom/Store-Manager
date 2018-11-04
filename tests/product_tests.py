@@ -248,9 +248,8 @@ class FlaskTestCase(BaseTestCase):
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
     """Test missing PUT columns"""
-    """Test authority to access this endpoint"""
 
-    def test_authority_to_edit(self):
+    def test_invalid_edit_column(self):
         with self.app.test_client() as client:
             response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
                                                                  'Authorization': 'Bearer ' +
@@ -289,6 +288,29 @@ class FlaskTestCase(BaseTestCase):
             self.assertEqual(response.status_code, 400)
             responseJson = json.loads(response.data.decode())
             self.assertIn('no such entry found', responseJson['message'])
+
+    """Testing invalid data in PUT columns"""
+    """Testing editing a non-existent product"""
+
+    def test_invalid_data_in_put_columns(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.put('/api/v1/products/10',
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(dict(product_name="water",
+                                                       unit_price="water",
+                                                       stock=100)))
+            self.assertEqual(response.status_code, 400)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('Please review the values added', responseJson['message'])
 
     """Test deleting non-existing record"""
     def test_delete_a_non_existent_product(self):
