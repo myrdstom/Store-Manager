@@ -60,7 +60,7 @@ class Sales(Resource):
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
         except Exception:
-            return {'message': 'Something went wrong with your inputs: Please review them'}, 400
+            return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 
 
 API.add_resource(Sales, '/sales', '/sales/<int:sale_id>')

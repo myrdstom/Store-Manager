@@ -48,7 +48,7 @@ class Products(Resource):
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
         except Exception:
-            return {'message': 'Something went wrong with your inputs: Please review them'}, 400
+            return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 
     @jwt_required
     def put(self, product_id):
@@ -71,7 +71,7 @@ class Products(Resource):
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
         except:
-            return {'message': 'Something went wrong with your inputs: Please review them'}, 400
+            return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 
     @jwt_required
     def delete(self, product_id):
