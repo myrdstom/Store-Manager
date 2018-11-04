@@ -226,6 +226,27 @@ class FlaskTestCase(BaseTestCase):
             responseJson = json.loads(response.data.decode())
             self.assertIn("water", responseJson['product_name'])
 
+    """Testing editing a non-existent product"""
+    def test_edit_a_non_existent_product(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.put('/api/v1/products/10',
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(dict(product_name="water",
+                                                       unit_price=2000,
+                                                       stock=100)))
+            self.assertEqual(response.status_code, 400)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('no such entry found', responseJson['message'])
+
     """Test deleting non-existing record"""
     def test_delete_a_non_existent_product(self):
         with self.app.test_client() as client:
@@ -242,12 +263,11 @@ class FlaskTestCase(BaseTestCase):
                                               'Authorization': 'Bearer ' +
                                                                self.admin_login()[
                                                                    'access_token']})
-            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.status_code, 200)
             responseJson = json.loads(response.data.decode())
             self.assertIn('Product does not exist', responseJson['message'])
 
 
-    """Testing successfully deleting a product"""
     """Test deleting non-existing record"""
 
     def test_delete_a_product(self):
