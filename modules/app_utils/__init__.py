@@ -9,6 +9,12 @@ def empty_string_catcher(value):
     return True
 
 
+def email_validator(value):
+    if re.match(r"[a-zA-z0-9]+@[a-z]+\.[a-z]+", value):
+        return True
+    return False
+
+
 def is_Bool(value):
     if isinstance(value, bool):
         return True
@@ -44,14 +50,15 @@ def check_for_letters(value):
 
 
 class ValidateUserData:
-    def __init__(self, username, password):
+    def __init__(self, username, password, email):
         self.username = username
         self.password = password
+        self.email = email
 
     def validate_user(self):
         if not is_string(self.username) or not is_string(self.password) \
-                or not empty_string_catcher(self.username) or not empty_string_catcher(self.password)\
-                or not self.username.isalpha():
+                or not empty_string_catcher(self.username) or not empty_string_catcher(self.password) \
+                or not self.username.isalpha() or not email_validator(self.email):
             return True
 
 

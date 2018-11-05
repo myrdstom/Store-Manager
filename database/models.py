@@ -11,9 +11,10 @@ class DatabaseUrl:
 class User:
     """Class handles user object operations"""
 
-    def __init__(self, username, password, role):
+    def __init__(self, username, password, email, role):
         self.username = username
         self.password = password
+        self.email = email
         self.role = role
 
     def get_by_username(username):
@@ -22,10 +23,18 @@ class User:
         if user is None:
             return {}
         else:
-            return dict(user_id=user[0], username=user[1], password=user[2], role=user[3])
+            return dict(user_id=user[0], username=user[1], password=user[2], email=user[3], role=user[4])
+
+    def get_by_email(email):
+        """Method to retrieve a username from the database"""
+        user = DatabaseUrl.database_url().fetch_by_param('users', 'email', email)
+        if user is None:
+            return {}
+        else:
+            return dict(user_id=user[0], username=user[1], password=user[2], email=user[3], role=user[4])
 
     def insert_user(self):
-        user = DatabaseUrl.database_url().create_user(self.username, self.password, self.role)
+        user = DatabaseUrl.database_url().create_user(self.username, self.password, self.email, self.role)
 
         if user is None:
             return ()
