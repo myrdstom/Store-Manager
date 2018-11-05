@@ -83,6 +83,20 @@ class DBHandler:
             table_name, column, value)
         self.cur.execute(query)
 
+
+    def modify_users(self, role, userId):
+        self.cur.execute(
+            "UPDATE users SET role=%s WHERE userId=%s",
+            (role, userId))
+        self.cur.execute(
+            "SELECT role FROM users WHERE userId=%s", (userId,))
+        req = self.cur.fetchone()
+        if req is None:
+            return None
+        user_dict = {"role": req[0]}
+
+        return user_dict
+
     '''Functions to handle Products'''
 
     def create_product(self, product_name, unit_price, stock):

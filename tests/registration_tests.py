@@ -126,7 +126,7 @@ class FlaskTestCase(BaseTestCase):
 
     """Testing promoting a non-existent user"""
 
-    def test_invalid_user_role(self):
+    def test_promote_non_existent_user(self):
         with self.app.test_client() as client:
             response = client.post("/api/v1/signup", headers={'Content-Type': 'application/json',
                                                               'Authorization': 'Bearer ' +
@@ -136,16 +136,16 @@ class FlaskTestCase(BaseTestCase):
                                                         password="password",
                                                         email="nserekopaul@gmail.com")))
             self.assertEqual(response.status_code, 201)
-            response1 = client.put("/api/v1/signup/200", headers={'Content-Type': 'application/json',
-                                                                  'Authorization': 'Bearer ' +
-                                                                                   self.admin_login()[
-                                                                                       'access_token']},
+            response1 = client.put("/api/v1/signup/2000", headers={'Content-Type': 'application/json',
+                                                                   'Authorization': 'Bearer ' +
+                                                                                    self.admin_login()[
+                                                                                        'access_token']},
                                    data=json.dumps(dict(role="store-owner")))
             self.assertEqual(response1.status_code, 400)
             self.assertIn(b'User does not exist', response1.data)
 
-
     """Test right to access endpoint"""
+
     def test_authority_to_access_endpoint(self):
         with self.app.test_client() as client:
             response1 = client.put("/api/v1/signup/200", headers={'Content-Type': 'application/json',
@@ -155,7 +155,6 @@ class FlaskTestCase(BaseTestCase):
                                    data=json.dumps(dict(role="store-owner")))
             self.assertEqual(response1.status_code, 400)
             self.assertIn(b'you are not authorized to view this resource', response1.data)
-
 
     """Implement tests for the login endpoint"""
 

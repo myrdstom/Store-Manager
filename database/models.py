@@ -26,12 +26,21 @@ class User:
             return dict(user_id=user[0], username=user[1], password=user[2], email=user[3], role=user[4])
 
     def get_by_email(email):
-        """Method to retrieve a username from the database"""
+        """Method to retrieve a username from the database by email"""
         user = DatabaseUrl.database_url().fetch_by_param('users', 'email', email)
         if user is None:
             return {}
         else:
             return dict(user_id=user[0], username=user[1], password=user[2], email=user[3], role=user[4])
+
+    @staticmethod
+    def update_user_role(role, userId):
+        user = DatabaseUrl.database_url().modify_users(role, userId)
+
+        if user is None:
+            return ()
+        else:
+            return user
 
     def insert_user(self):
         user = DatabaseUrl.database_url().create_user(self.username, self.password, self.email, self.role)
