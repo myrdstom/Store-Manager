@@ -8,8 +8,6 @@ class FlaskTestCase(BaseTestCase):
 
     """Testing Sign Up endpoint"""
 
-    """Testing a poorly added email"""
-
     """Testing for an existing username"""
 
     def test_existing_username(self):
@@ -19,16 +17,18 @@ class FlaskTestCase(BaseTestCase):
                                                                               self.admin_login()[
                                                                                   'access_token']},
                                    data=json.dumps(dict(username="myrdstom",
-                                                        password="password")))
+                                                        password="password",
+                                                        email="nserekopaul@gmail.com")))
             self.assertEqual(response.status_code, 201)
             response = client.post("api/v1/signup", headers={'Content-Type': 'application/json',
                                                              'Authorization': 'Bearer ' +
                                                                               self.admin_login()[
                                                                                   'access_token']},
                                    data=json.dumps(dict(username="myrdstom",
-                                                        password="password")))
+                                                        password="password",
+                                                        email="nserekopaul@gmail.com")))
             self.assertEqual(response.status_code, 409)
-            self.assertIn(b'A user with that username already exists', response.data)
+            self.assertIn(b'A user with those credentials already exists', response.data)
 
     #
 
@@ -41,7 +41,8 @@ class FlaskTestCase(BaseTestCase):
                                                                                self.admin_login()[
                                                                                    'access_token']},
                                    data=json.dumps(dict(username="myrdstom",
-                                                        password="password")))
+                                                        password="password",
+                                                        email="nserekopaul@gmail.com")))
             self.assertEqual(response.status_code, 201)
             self.assertIn(b'User successfully registered', response.data)
 
@@ -55,15 +56,17 @@ class FlaskTestCase(BaseTestCase):
                                                                                self.admin_login()[
                                                                                    'access_token']},
                                    data=json.dumps(dict(username="myrdstom",
-                                                        password="password")))
+                                                        password="password",
+                                                        email="nserekopaul@gmail.com")))
             self.assertEqual(response.status_code, 201)
             self.assertIn(b'User successfully registered', response.data)
             response2 = client.post("/api/v1/signup", headers={'Content-Type': 'application/json',
                                                               'Authorization': 'Bearer ' +
                                                                                self.login_user()[
                                                                                    'access_token']},
-                                   data=json.dumps(dict(username="  ",
-                                                        password="password")))
+                                   data=json.dumps(dict(username="myrdstom",
+                                                        password="password",
+                                                        email="bgpeter@gmail.com")))
             self.assertEqual(response2.status_code, 409)
             responseJson = json.loads(response2.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
@@ -78,7 +81,8 @@ class FlaskTestCase(BaseTestCase):
                                                                                self.admin_login()[
                                                                                    'access_token']},
                                    data=json.dumps(dict(username="  ",
-                                                        password="password")))
+                                                        password="password",
+                                                        email="nserekopaul@gmail.com")))
             self.assertEqual(response.status_code, 400)
             self.assertIn(b'Please review the values added', response.data)
 
@@ -90,7 +94,8 @@ class FlaskTestCase(BaseTestCase):
         with self.app.test_client() as client:
             response = client.post("/api/v1/login", content_type='application/json',
                                    data=json.dumps(dict(username="  ",
-                                                        password="password")))
+                                                        password="password",
+                                                        email="nserekopaul@gmail.com")))
             self.assertEqual(response.status_code, 400)
             self.assertIn(b'Please review the values added', response.data)
 
@@ -100,7 +105,8 @@ class FlaskTestCase(BaseTestCase):
         with self.app.test_client() as client:
             response = client.post("/api/v1/login", content_type='application/json',
                                    data=json.dumps(dict(username=123,
-                                                        password="password")))
+                                                        password="password",
+                                                        email="nserekopaul@gmail.com")))
             self.assertEqual(response.status_code, 400)
             self.assertIn(b'Please review the values added', response.data)
 
@@ -120,7 +126,8 @@ class FlaskTestCase(BaseTestCase):
         with self.app.test_client() as client:
             response = client.post("/api/v1/login", content_type='application/json',
                                    data=json.dumps(dict(username="admin",
-                                                        password="password2")))
+                                                        password="password2",
+                                                        email="admin@gmail.com")))
             self.assertEqual(response.status_code, 400)
             self.assertIn(b'Error: wrong password', response.data)
 
