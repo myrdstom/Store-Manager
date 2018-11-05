@@ -290,7 +290,6 @@ class FlaskTestCase(BaseTestCase):
             self.assertIn('no such entry found', responseJson['message'])
 
     """Testing invalid data in PUT columns"""
-    """Testing editing a non-existent product"""
 
     def test_invalid_data_in_put_columns(self):
         with self.app.test_client() as client:
@@ -333,7 +332,7 @@ class FlaskTestCase(BaseTestCase):
             self.assertIn('Product does not exist', responseJson['message'])
 
 
-    """Test deleting non-existing record"""
+    """Test deleting a record"""
 
     def test_delete_a_product(self):
         with self.app.test_client() as client:
@@ -543,7 +542,6 @@ class FlaskTestCase(BaseTestCase):
             self.assertIn('not enough in stock for you to purchase that amount', response_json['message'])
 
 
-    """Test invalid data types"""
     """Test limited stock"""
     def test_invalid_stock_data_types(self):
         with self.app.test_client() as client:

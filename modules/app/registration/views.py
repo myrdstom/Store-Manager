@@ -1,5 +1,5 @@
 from modules.app.registration import auth_v1
-from modules.app_utils import ValidateUserData
+from modules.app_utils import ValidateUserData, is_string, email_validator, empty_string_catcher
 from flask import request
 from database.models import User
 from flask_restful import Resource, Api
@@ -21,13 +21,14 @@ class Registration(Resource):
             data = request.get_json()
             username = data['username']
             password = generate_password_hash(data['password'], method='sha256')
-            user_data = ValidateUserData(username, password)
+            email = data['email']
+            user_data = ValidateUserData(username, password, email)
             if user_data.validate_user():
                 return {"message": "Please review the values added"}, 400
-            if User.get_by_username(username):
-                return {'message': 'A user with that username already exists'}, 409
+            if User.get_by_username(username) or User.get_by_email(email):
+                return {'message': 'A user with those credentials already exists'}, 409
             else:
-                user = User(username, password, role)
+                user = User(username, password, email, role)
                 user.insert_user()
                 return {'message': 'User successfully registered', "username": username}, 201
         else:
@@ -41,8 +42,9 @@ class Login(Resource):
         username = data['username']
         password = data['password']
         check_for_user = User.get_by_username(username)
-        user_data = ValidateUserData(username, password)
-        if user_data.validate_user():
+        if not is_string(username) or not is_string(password) \
+                or not empty_string_catcher(username) or not empty_string_catcher(password) \
+                or not username.isalpha():
             return {"message": "Please review the values added"}, 400
         if not check_for_user:
             return {'message': 'The user does not exist, please register'}, 400
