@@ -3,6 +3,7 @@ from modules.Instance.config import DevelopmentConfig
 from modules.app.registration import auth_v1
 from modules.app.products import apcn_v1
 from modules.app.sales import apsn_v1
+from modules.app.categories import apca_v1
 from flask_jwt_extended import JWTManager
 import datetime
 from flasgger import Swagger
@@ -25,5 +26,6 @@ def create_app():
     app.register_blueprint(auth_v1)
     app.register_blueprint(apcn_v1)
     app.register_blueprint(apsn_v1)
+    app.register_blueprint(apca_v1)
 
     return app

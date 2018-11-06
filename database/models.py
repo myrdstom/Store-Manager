@@ -11,11 +11,12 @@ class DatabaseUrl:
 class User:
     """Class handles user object operations"""
 
-    def __init__(self, username, password, email, role):
+    def __init__(self, username, password, email, role, category_name):
         self.username = username
         self.password = password
         self.email = email
         self.role = role
+        self.category_name = category_name
 
     def get_by_username(username):
         """Method to retrieve a username from the database"""
@@ -51,14 +52,49 @@ class User:
             return user
 
 
+class Category:
+    def __init__(self, category_name):
+        self.category_name = category_name
+
+    def insert_category(self):
+        category = DatabaseUrl.database_url().create_category(self.category_name)
+
+        if category is None:
+            return ()
+        else:
+            return category
+
+    def view_categories():
+        categories = DatabaseUrl.database_url().view_all_categories()
+        return categories
+
+    def find_category_by_name(category_name):
+        """Method to retrieve a username from the database"""
+        category = DatabaseUrl.database_url().fetch_by_param('categories', 'category_name', category_name)
+
+        if category is None:
+            return {}
+        else:
+            return dict(category_id=category[0], category_name=category[1])
+
+    def delete_single_category(category_id):
+        category = DatabaseUrl.database_url().fetch_by_param('categories', 'category_id', category_id)
+        if category:
+            DatabaseUrl.database_url().delete_by_param('categories', 'category_id', category_id)
+            return True
+        else:
+            return False
+
+
 class Product:
-    def __init__(self, product_name, unit_price, stock):
+    def __init__(self, product_name, unit_price, stock, category_name):
         self.product_name = product_name
         self.unit_price = unit_price
         self.stock = stock
+        self.category_name = category_name
 
     def insert_product(self):
-        product = DatabaseUrl.database_url().create_product(self.product_name, self.unit_price, self.stock)
+        product = DatabaseUrl.database_url().create_product(self.product_name, self.unit_price, self.stock, self.category_name)
 
         if product is None:
             return ()
@@ -71,11 +107,11 @@ class Product:
         if product is None:
             return {}
         else:
-            return dict(product_id=product[0], product_name=product[1], unitprice=product[2], stock=product[3])
+            return dict(product_id=product[0], product_name=product[1], unitprice=product[2], stock=product[3], category_name = product[4])
 
     @staticmethod
-    def update_product(product_name, unit_price, stock, product_id):
-        product = DatabaseUrl.database_url().modify_products(product_name, unit_price, stock, product_id)
+    def update_product(product_name, unit_price, stock, product_id, category_name):
+        product = DatabaseUrl.database_url().modify_products(product_name, unit_price, stock, product_id, category_name)
 
         if product is None:
             return ()
@@ -101,7 +137,7 @@ class Product:
         if product is None:
             return {}
         else:
-            return dict(product_id=product[0], product_name=product[1], unitprice=product[2], stock=product[3])
+            return dict(product_id=product[0], product_name=product[1], unitprice=product[2], stock=product[3],  category_name = product[4])
 
     def delete_single_product(product_id):
         product = DatabaseUrl.database_url().fetch_by_param('products', 'product_id', product_id)
@@ -139,7 +175,7 @@ class Sale:
             return {}
         else:
             return dict(sale_id=sale[0], username=sale[1], product_name=sale[2], quantity=sale[3],
-                    total=sale[4])
+                        total=sale[4])
 
     @staticmethod
     def update_stock(stock, product_id):
