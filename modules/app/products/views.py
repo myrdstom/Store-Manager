@@ -1,7 +1,7 @@
 from modules.app.products import apcn_v1
 from modules.app_utils import ValidateProductData
 from flask import request
-from database.models import Product
+from database.models import Product, Category
 from flask_restful import Resource, Api
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flasgger import swag_from
@@ -35,16 +35,21 @@ class Products(Resource):
                 productname = data['product_name']
                 unit_price = data['unit_price']
                 stock = data['stock']
-                product_name = productname.lower()
-                product_data = ValidateProductData(product_name, unit_price, stock)
+                category_name = data['category_name']
+                product_data = ValidateProductData(productname, unit_price, stock)
                 if product_data.validate_product_data():
                     return {"message": "Please review the values added"}, 400
+                product_name = productname.lower()
                 if Product.find_product_by_name(product_name):
                     return {'message': 'A product with that product name already exists'}, 409
-                product = Product(product_name, unit_price, stock)
-                product.insert_product()
-                return {'message': 'product created', 'product_name': product_name,
-                        'unit_price': unit_price, 'stock': stock}, 201
+                category_identity = Category.find_category_by_name(category_name)
+                if category_identity:
+                    product = Product(product_name, unit_price, stock, category_name)
+                    product.insert_product()
+                    return {'message': 'product created', 'product_name': product_name,
+                            'unit_price': unit_price, 'stock': stock}, 201
+                else:
+                    return {'message':'category does not exist'}, 400
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
         except Exception:
@@ -60,17 +65,21 @@ class Products(Resource):
                 productname = data['product_name']
                 unit_price = data['unit_price']
                 stock = data['stock']
-                product_name = productname.lower()
-                product_data = ValidateProductData(product_name, unit_price, stock)
+                category_name = data['category_name']
+                product_data = ValidateProductData(productname, unit_price, stock)
                 if product_data.validate_product_data():
                     return {"message": "Please review the values added"}, 400
-                product = Product.update_product(product_name, unit_price, stock, product_id)
-                if len(product) == 0:
-                    return {'message': 'no such entry found'}, 400
-                return product, 201
+                product_name = productname.lower()
+                if Category.find_category_by_name(category_name):
+                    product = Product.update_product(product_name, unit_price, stock, category_name, product_id)
+                    if len(product) == 0:
+                        return {'message': 'no such entry found'}, 400
+                    return product, 201
+                else:
+                    return {'message':'Category does not exist'}
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
-        except:
+        except Exception:
             return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 
     @jwt_required
