@@ -34,6 +34,23 @@ class Registration(Resource):
         else:
             return {'message': 'you are not authorized to view this resource'}, 409
 
+    @jwt_required
+    def put(self, userId):
+        current_user = get_jwt_identity()['role']
+        if current_user == "store-owner":
+            data = request.get_json()
+            new_role = data['role']
+            role = new_role.lower()
+            user = User.update_user_role(role, userId)
+            if len(user) == 0:
+                return {'message': 'User does not exist'}, 400
+            if role == 'store-owner' or role == 'shop-attendant':
+                return {'message': 'User has been promoted'}, 200
+            else:
+                return {'message': 'Invalid role, please try again'}, 400
+        else:
+            return {'message': 'you are not authorized to view this resource'}, 400
+
 
 class Login(Resource):
     @swag_from("../docs/login.yml")
@@ -55,5 +72,5 @@ class Login(Resource):
         return {'access_token': access_token}, 200
 
 
-API.add_resource(Registration, '/signup')
+API.add_resource(Registration, '/signup', '/signup/<int:userId>')
 API.add_resource(Login, '/login')
