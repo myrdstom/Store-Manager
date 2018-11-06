@@ -37,10 +37,11 @@ class Sales(Resource):
                 productname = data['product_name']
                 username = current_user
                 quantity = data['quantity']
-                product_name = productname.lower()
-                if not is_integer(quantity) or not is_string(product_name) or not empty_string_catcher(product_name) or \
-                        check_for_letters(product_name)or quantity < 0:
+
+                if not is_integer(quantity) or not is_string(productname) or not empty_string_catcher(productname) or \
+                        check_for_letters(productname)or quantity < 0:
                     return {'message': 'Error:Invalid value added, please review'}, 400
+                product_name = productname.lower()
                 product_identity = Product.view_single_product_by_name(product_name)
                 if product_identity:
                     available_stock = product_identity['stock']

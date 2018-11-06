@@ -73,3 +73,13 @@ class ValidateProductData:
                 or not empty_string_catcher(self.product_name) \
                 or check_for_letters(self.product_name):
             return True
+
+
+class ValidateCategoryData:
+    def __init__(self, category_name):
+        self.category_name = category_name
+
+    def validate_category_data(self):
+        if not is_string(self.category_name) or not empty_string_catcher(self.category_name) \
+                or check_for_letters(self.category_name):
+            return True

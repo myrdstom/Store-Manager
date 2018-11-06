@@ -8,5 +8,6 @@ if __name__ == '__main__':
     handler = DBHandler(app.config['DATABASE_URL'])
     handler.create_tables()
 
+
     app.run(debug=True)
 
