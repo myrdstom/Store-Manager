@@ -11,12 +11,11 @@ class DatabaseUrl:
 class User:
     """Class handles user object operations"""
 
-    def __init__(self, username, password, email, role, category_name):
+    def __init__(self, username, password, email, role):
         self.username = username
         self.password = password
         self.email = email
         self.role = role
-        self.category_name = category_name
 
     def get_by_username(username):
         """Method to retrieve a username from the database"""
