@@ -1,7 +1,5 @@
 from database.db import DBHandler
 from flask import current_app as app
-import re
-from werkzeug.security import check_password_hash
 
 
 class DatabaseUrl:
@@ -13,9 +11,10 @@ class DatabaseUrl:
 class User:
     """Class handles user object operations"""
 
-    def __init__(self, username, password, role):
+    def __init__(self, username, password, email, role):
         self.username = username
         self.password = password
+        self.email = email
         self.role = role
 
     def get_by_username(username):
@@ -24,10 +23,27 @@ class User:
         if user is None:
             return {}
         else:
-            return dict(user_id=user[0], username=user[1], password=user[2], role=user[3])
+            return dict(user_id=user[0], username=user[1], password=user[2], email=user[3], role=user[4])
+
+    def get_by_email(email):
+        """Method to retrieve a username from the database by email"""
+        user = DatabaseUrl.database_url().fetch_by_param('users', 'email', email)
+        if user is None:
+            return {}
+        else:
+            return dict(user_id=user[0], username=user[1], password=user[2], email=user[3], role=user[4])
+
+    @staticmethod
+    def update_user_role(role, userId):
+        user = DatabaseUrl.database_url().modify_users(role, userId)
+
+        if user is None:
+            return ()
+        else:
+            return user
 
     def insert_user(self):
-        user = DatabaseUrl.database_url().create_user(self.username, self.password, self.role)
+        user = DatabaseUrl.database_url().create_user(self.username, self.password, self.email, self.role)
 
         if user is None:
             return ()
@@ -117,14 +133,13 @@ class Sale:
         return sales
 
     def view_single_sale(sale_id):
-        response = DatabaseUrl.database_url().fetch_by_param('sales', 'sale_id', sale_id)
-        sale = dict(sale_id=response[0], username=response[1], product_name=response[2], quantity=response[3],
-                    total=response[4])
+        sale = DatabaseUrl.database_url().fetch_by_param('sales', 'sale_id', sale_id)
 
         if sale is None:
             return {}
         else:
-            return sale
+            return dict(sale_id=sale[0], username=sale[1], product_name=sale[2], quantity=sale[3],
+                    total=sale[4])
 
     @staticmethod
     def update_stock(stock, product_id):

@@ -1,8 +1,8 @@
 from flask import Flask, jsonify
-from Instance.config import DevelopmentConfig
-from app.registration import auth_v1
-from app.products import apcn_v1
-from app.sales import apsn_v1
+from modules.Instance.config import DevelopmentConfig
+from modules.app.registration import auth_v1
+from modules.app.products import apcn_v1
+from modules.app.sales import apsn_v1
 from flask_jwt_extended import JWTManager
 import datetime
 from flasgger import Swagger

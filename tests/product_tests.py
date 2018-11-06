@@ -18,15 +18,16 @@ class FlaskTestCase(BaseTestCase):
     def test_invalid_url(self):
         with self.app.test_client() as client:
             response = client.post('/api/v1//products', headers={'Content-Type': 'application/json',
-                                                                'Authorization': 'Bearer ' +
-                                                                                 self.admin_login()[
-                                                                                     'access_token']},
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
                                    data=json.dumps(product_data))
             self.assertEqual(response.status_code, 404)
             responseJson = json.loads(response.data.decode())
             self.assertIn('The requested Resource does not exist; Please review the URL', responseJson['message'])
 
     """Test adding a new item to the inventory"""
+
     def test_add_new_inventory_item(self):
         with self.app.test_client() as client:
             response = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
@@ -39,6 +40,7 @@ class FlaskTestCase(BaseTestCase):
             self.assertIn('product created', responseJson['message'])
 
     """Test duplicate product"""
+
     def test_add_new_inventory_item(self):
         with self.app.test_client() as client:
             response = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
@@ -50,15 +52,16 @@ class FlaskTestCase(BaseTestCase):
             responseJson = json.loads(response.data.decode())
             self.assertIn('product created', responseJson['message'])
             response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
-                                                                'Authorization': 'Bearer ' +
-                                                                                 self.admin_login()[
-                                                                                     'access_token']},
-                                   data=json.dumps(product_data))
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
+                                    data=json.dumps(product_data))
             self.assertEqual(response1.status_code, 409)
             responseJson = json.loads(response1.data.decode())
             self.assertIn('A product with that product name already exists', responseJson['message'])
 
     """Test the product does not exist"""
+
     def test_product_does_not_exist(self):
         with self.app.test_client() as client:
             response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
@@ -78,6 +81,7 @@ class FlaskTestCase(BaseTestCase):
             self.assertIn('the product does not exist', response_json['message'])
 
     """Test authority to create a product"""
+
     def test_authority_to_create_a_product(self):
         with self.app.test_client() as client:
             response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
@@ -88,7 +92,6 @@ class FlaskTestCase(BaseTestCase):
             self.assertEqual(response1.status_code, 409)
             responseJson = json.loads(response1.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
-
 
     """testing  GET all items in the inventory"""
 
@@ -171,6 +174,36 @@ class FlaskTestCase(BaseTestCase):
             responseJson = json.loads(response.data.decode())
             self.assertIn('Please review the values added', responseJson['message'])
 
+    """Testing for missing POST column"""
+
+    def test_missing_POST_column(self):
+        with self.app.test_client() as client:
+            response = client.post('/api/v1/products',
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.admin_login()[
+                                                                 'access_token']},
+                                   data=json.dumps(dict(unit_price=19000000,
+                                                        stock=100)))
+            self.assertEqual(response.status_code, 409)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('Something went wrong with your inputs: Please review them', responseJson['message'])
+
+    """Testing for missing PUT column"""
+
+    def test_missing_PUT_column(self):
+        with self.app.test_client() as client:
+            response = client.post('/api/v1/products',
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.admin_login()[
+                                                                 'access_token']},
+                                   data=json.dumps(dict(unit_price=19000000,
+                                                        stock=100)))
+            self.assertEqual(response.status_code, 409)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('Something went wrong with your inputs: Please review them', responseJson['message'])
+
     """Testing the edit product endpoint"""
 
     def test_edit_a_product(self):
@@ -193,7 +226,93 @@ class FlaskTestCase(BaseTestCase):
             responseJson = json.loads(response.data.decode())
             self.assertIn("water", responseJson['product_name'])
 
-    def test_delete_a_product(self):
+    """Test authority to access this endpoint"""
+    def test_authority_to_edit(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.put('/api/v1/products/1',
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.login_user()[
+                                                                'access_token']},
+                                  data=json.dumps(dict(product_name="water",
+                                                       unit_price=2000,
+                                                       stock=100)))
+            self.assertEqual(response.status_code, 409)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('you are not authorized to view this resource', responseJson['message'])
+
+    """Test missing PUT columns"""
+
+    def test_invalid_edit_column(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.put('/api/v1/products/1',
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(dict(unit_price=2000,
+                                                       stock=100)))
+            self.assertEqual(response.status_code, 409)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('Something went wrong with your inputs: Please review them', responseJson['message'])
+
+    """Testing editing a non-existent product"""
+    def test_edit_a_non_existent_product(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.put('/api/v1/products/10',
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(dict(product_name="water",
+                                                       unit_price=2000,
+                                                       stock=100)))
+            self.assertEqual(response.status_code, 400)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('no such entry found', responseJson['message'])
+
+    """Testing invalid data in PUT columns"""
+
+    def test_invalid_data_in_put_columns(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.put('/api/v1/products/10',
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(dict(product_name="water",
+                                                       unit_price="water",
+                                                       stock=100)))
+            self.assertEqual(response.status_code, 400)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('Please review the values added', responseJson['message'])
+
+    """Test deleting non-existing record"""
+    def test_delete_a_non_existent_product(self):
         with self.app.test_client() as client:
             response = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
                                                                 'Authorization': 'Bearer ' +
@@ -208,27 +327,61 @@ class FlaskTestCase(BaseTestCase):
                                               'Authorization': 'Bearer ' +
                                                                self.admin_login()[
                                                                    'access_token']})
-            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.status_code, 200)
             responseJson = json.loads(response.data.decode())
             self.assertIn('Product does not exist', responseJson['message'])
 
 
+    """Test deleting a record"""
+
+    def test_delete_a_product(self):
+        with self.app.test_client() as client:
+            response = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                'Authorization': 'Bearer ' +
+                                                                                 self.admin_login()[
+                                                                                     'access_token']},
+                                   data=json.dumps(product_data))
+            self.assertEqual(response.status_code, 201)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('product created', responseJson['message'])
+            response = client.delete('/api/v1/products/1',
+                                     headers={'Content-Type': 'application/json',
+                                              'Authorization': 'Bearer ' +
+                                                               self.admin_login()[
+                                                                   'access_token']})
+            self.assertEqual(response.status_code, 200)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('Record successfully deleted', responseJson['message'])
+
+    """Test the authority to delete an item"""
+    def test_authority_to_delete(self):
+        with self.app.test_client() as client:
+            response = client.delete('/api/v1/products/10',
+                                     headers={'Content-Type': 'application/json',
+                                              'Authorization': 'Bearer ' +
+                                                               self.login_user()[
+                                                                   'access_token']})
+            self.assertEqual(response.status_code, 409)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('you are not authorized to view this resource', responseJson['message'])
+
+    """Sales tests"""
 
     def test_get_all_items_sold(self):
         with self.app.test_client() as client:
             response1 = client.post('/api/v1/products',
                                     headers={'Content-Type': 'application/json',
-                                                                 'Authorization': 'Bearer ' +
-                                                                                  self.admin_login()[
-                                                                                      'access_token']},
+                                             'Authorization': 'Bearer ' +
+                                                              self.admin_login()[
+                                                                  'access_token']},
                                     data=json.dumps(product_data))
             self.assertEqual(response1.status_code, 201)
             response = client.post("/api/v1/sales",
-                                  headers={'Content-Type': 'application/json',
-                                           'Authorization': 'Bearer ' +
-                                                            self.login_user()[
-                                                                'access_token']},
-                                  data=json.dumps(sale_data))
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.login_user()[
+                                                                 'access_token']},
+                                   data=json.dumps(sale_data))
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
             response = client.get("/api/v1/sales",
@@ -236,7 +389,7 @@ class FlaskTestCase(BaseTestCase):
                                            'Authorization': 'Bearer ' +
                                                             self.admin_login()[
                                                                 'access_token']},
-                                 data=json.dumps(sale_data))
+                                  data=json.dumps(sale_data))
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn("acer", response_json[0]['product_name'])
@@ -269,24 +422,52 @@ class FlaskTestCase(BaseTestCase):
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn("acer", response_json['product_name'])
-#     #
+
+    """Test sale does not exist"""
+
+    def test_sale_does_not_exist(self):
+        with self.app.test_client() as client:
+            response = client.get("/api/v1/sales/100",
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(sale_data))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('Sale does not exist', response_json['message'])
+
+    """Test empty database"""
+
+    def test_empty_database(self):
+        with self.app.test_client() as client:
+            response = client.get("/api/v1/sales",
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(sale_data))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('There are no values in the database', response_json['message'])
+
     """testing adding a sale"""
 
     def test_add_a_sale(self):
         with self.app.test_client() as client:
             response1 = client.post('/api/v1/products',
                                     headers={'Content-Type': 'application/json',
-                                                                 'Authorization': 'Bearer ' +
-                                                                                  self.admin_login()[
-                                                                                      'access_token']},
+                                             'Authorization': 'Bearer ' +
+                                                              self.admin_login()[
+                                                                  'access_token']},
                                     data=json.dumps(product_data))
             self.assertEqual(response1.status_code, 201)
             response = client.post("/api/v1/sales",
-                                  headers={'Content-Type': 'application/json',
-                                           'Authorization': 'Bearer ' +
-                                                            self.login_user()[
-                                                                'access_token']},
-                                  data=json.dumps(sale_data))
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.login_user()[
+                                                                 'access_token']},
+                                   data=json.dumps(sale_data))
             response_json = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
 
@@ -295,37 +476,93 @@ class FlaskTestCase(BaseTestCase):
     def test_authority_to_create_a_sale(self):
         with self.app.test_client() as client:
             response1 = client.post('/api/v1/sales', headers={'Content-Type': 'application/json',
-                                                                 'Authorization': 'Bearer ' +
-                                                                                  self.admin_login()[
-                                                                                      'access_token']},
+                                                              'Authorization': 'Bearer ' +
+                                                                               self.admin_login()[
+                                                                                   'access_token']},
                                     data=json.dumps(product_data))
             self.assertEqual(response1.status_code, 409)
             responseJson = json.loads(response1.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
-    #     #
-#     # """Testing for wrong column name"""
-#     #
-#     # def test_wrong_sale_column_name(self):
-#     #     with self.app.test_client() as client:
-#     #         response = client.post('/api/v1/sales', content_type='application/json',
-#     #                                data=json.dumps(dict(product_idd=1,
-#     #                                                     quantity=32)))
-#     #         self.assertEqual(response.status_code, 400)
-#     #         responseJson = json.loads(response.data.decode())
-#     #         self.assertIn('Please review the columns', responseJson['message'])
-#     #
-#     # """Testing for wrong data type in post sale"""
-#     #
-#     # def test_wrong_sale_data_type(self):
-#     #     with self.app.test_client() as client:
-#     #         response = client.post('/api/v1/sales', content_type='application/json',
-#     #                                data=json.dumps(dict(product_id="1",
-#     #                                                     quantity=32)))
-#     #         self.assertEqual(response.status_code, 400)
-#     #         responseJson = json.loads(response.data.decode())
-#     #         self.assertIn('Error:Invalid value added, please review', responseJson['message'])
-#     #
+    """Testing for wrong column name"""
+
+    def test_wrong_sale_column_name(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products',
+                                    headers={'Content-Type': 'application/json',
+                                             'Authorization': 'Bearer ' +
+                                                              self.admin_login()[
+                                                                  'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.post('/api/v1/sales', headers={'Content-Type': 'application/json',
+                                                             'Authorization': 'Bearer ' +
+                                                                              self.login_user()[
+                                                                                  'access_token']},
+                                   data=json.dumps(dict(quantity=32)))
+            self.assertEqual(response.status_code, 409)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('Something went wrong with your inputs: Please review them', responseJson['message'])
+
+    """Test wrong data type for sale endpoint"""
+
+    def test_wrong_data_type_for_sale(self):
+        with self.app.test_client() as client:
+            response = client.post("/api/v1/sales",
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.login_user()[
+                                                                 'access_token']},
+                                   data=json.dumps(dict(product_name="acer",
+                                                        quantity=32)))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Product does not exist', response_json['message'])
+
+
+    """Test limited stock"""
+    def test_not_enough_stock(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products',
+                                    headers={'Content-Type': 'application/json',
+                                             'Authorization': 'Bearer ' +
+                                                              self.admin_login()[
+                                                                  'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.post("/api/v1/sales",
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.login_user()[
+                                                                 'access_token']},
+                                   data=json.dumps(dict(product_name="acer",
+                                                        quantity=320)))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('not enough in stock for you to purchase that amount', response_json['message'])
+
+
+    """Test limited stock"""
+    def test_invalid_stock_data_types(self):
+        with self.app.test_client() as client:
+            response1 = client.post('/api/v1/products',
+                                    headers={'Content-Type': 'application/json',
+                                             'Authorization': 'Bearer ' +
+                                                              self.admin_login()[
+                                                                  'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.post("/api/v1/sales",
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.login_user()[
+                                                                 'access_token']},
+                                   data=json.dumps(dict(product_name="acer",
+                                                        quantity="340")))
+            response_json = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Error:Invalid value added, please review', response_json['message'])
+
 
     if __name__ == '__main__':
         unittest.main()

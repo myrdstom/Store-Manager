@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="navbar-nav">
+            <li><a href="index.html"><d1>Logout</d1></a></li>
+            <li><a href="#"><img src="../static/images/avatar.png" alt="" class="avatar-favicon"><d1>Hello Aretha</d1></a></li>
+
+        </ul>
+    </nav>
+    <div id="side-menu" class="side-nav">
+
+        <a href="dashboard.html" class="active"><img src="../static/images/home.png" alt="" class="favicon"> <span id="side-menu-link">Dashboard</span></a>
+        <br>
+        <a href="owner-inventory.html"><img src="../static/images/inventory.png" alt="" class="favicon"><span id="side-menu-link4">Owner-Inventory</span></a>
+        <br>
+        <a href="reports.html" ><img src="../static/images/reports.png" alt="" class="favicon"><span id="side-menu-link3">Reports</span></a>
+        <br>
+        <a href="cart.html" ><img src="../static/images/cart.png" alt="" class="favicon"><span id="side-menu-link5">Cart</span></a>
+    </div>
+    <div id="main">
+        <span class="navbartoggle opened" id="open-slide" style="font-size:30px;cursor:pointer;margin-top:-80px;position:absolute;">
+            &#9776;
+        </span>
+        <div id="main">
+        <label id="report-label">Dashboard</label>
+        <br>
+        <input type="text" id="myInput"  placeholder="Filter results..">
+        <div id="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Shop attendant</th>
+                  <th>Product Sold</th>
+                  <th>Price Per Unit</th>
+                  <th>quantity Sold</th>
+                  <th>Total Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Aretha Mayangi</strong></td>
+                  <td>HP Envy</td>
+                  <td>2000000.00</td>
+                  <td>10</td>
+                  <td>20000000.00</td>
+                </tr>
+                <tr>
+                  <td><strong>Aretha Mayangi</strong></td>
+                  <td>toshiba satellite s55t-c5325-4k</td>
+                  <td>3800000</td>
+                  <td>20</td>
+                  <td>76000000.00</td>
+                </tr>
+                <tr>
+                  <td><strong>Aretha Mayangi</strong></td>
+                  <td>Soap</td>
+                  <td>2000.00</td>
+                  <td>10</td>
+                  <td>20000.00</td>
+                </tr>
+                <tr>
+                  <td><strong>Aretha Mayangi</strong></td>
+                  <td>LG XM-260 Optical Mouse</td>
+                  <td>15000.00</td>
+                  <td>10</td>
+                  <td>150000.00</td>
+                </tr>
+                <tr>
+                  <td><strong>Aretha Mayangi</strong></td>
+                  <td>Acer Aspire R7-572-5893</td>
+                  <td>1200000.00</td>
+                  <td>5</td>
+                  <td>6000000.00</td>
+                </tr>
+                <tr>
+                  <td><strong>Aretha Mayangi</strong></td>
+                  <td>Lenovo V130</td>
+                  <td>1400000.00</td>
+                  <td>10</td>
+                  <td>14000000.00</td>
+                </tr>
+                <tr>
+                  <td><strong>Aretha Mayangi</strong></td>
+                  <td>Asus ROG Strix GL703GS</td>
+                  <td>8000000.00</td>
+                  <td>2</td>
+                  <td>16000000.00</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="admin-btn">
+            <a href="filter.html"><input type="submit" value="View item" class="btn-btn-submit"></a>
+        </div>
+        </div>
+    </div>
+    </div>
+    <nav class="navbar-bottom">
+            <h2>Store Manager © 2018 . All Rights Reserved.</h2>
+    </nav>
+    <script src="../static/js/myscript.js"></script>
+</body>
+</html>

@@ -31,10 +31,11 @@ class DBHandler:
                         "userId SERIAL PRIMARY KEY , " \
                         "username varchar NOT NULL UNIQUE, " \
                         "password varchar NOT NULL, " \
+                        "email varchar NOT NULL UNIQUE, " \
                         "role varchar NOT NULL); " \
-                        "INSERT INTO users(username, password, role) " \
+                        "INSERT INTO users(username, password, email, role) " \
                         "SELECT 'admin', 'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0', " \
-                        "'store-owner' WHERE NOT EXISTS (SELECT * FROM users WHERE username='admin');"
+                        "'admin@gmail.com','store-owner' WHERE NOT EXISTS (SELECT * FROM users WHERE username='admin');"
             self.cur.execute(statement)
 
             statement2 = "CREATE TABLE IF NOT EXISTS products (" \
@@ -56,16 +57,16 @@ class DBHandler:
 
     '''Functions to handle users and authentication'''
 
-    def create_user(self, username, password, role):
-        self.cur.execute("INSERT INTO users (username, password, role) "
-                         "VALUES('{}', '{}', 'shop-attendant');".format
-                         (username, password, role))
+    def create_user(self, username, password, email,  role):
+        self.cur.execute("INSERT INTO users (username, password, email, role) "
+                         "VALUES('{}', '{}', '{}','shop-attendant');".format
+                         (username, password, email, role))
 
     def auth_user(self, username):
         query = "SELECT * FROM users WHERE username=%s"
         self.cur.execute(query, (username,))
         user = self.cur.fetchone()
-        userDict = {"username": user[2], "password": user[3], "role": user[4]}
+        userDict = {"username": user[1], "password": user[2], "email": user[3], "role": user[4]}
         return userDict
 
     def fetch_by_param(self, table_name, column, value):
@@ -81,6 +82,20 @@ class DBHandler:
         query = "DELETE FROM {} WHERE {} = '{}';".format(
             table_name, column, value)
         self.cur.execute(query)
+
+
+    def modify_users(self, role, userId):
+        self.cur.execute(
+            "UPDATE users SET role=%s WHERE userId=%s",
+            (role, userId))
+        self.cur.execute(
+            "SELECT role FROM users WHERE userId=%s", (userId,))
+        req = self.cur.fetchone()
+        if req is None:
+            return None
+        user_dict = {"role": req[0]}
+
+        return user_dict
 
     '''Functions to handle Products'''
 

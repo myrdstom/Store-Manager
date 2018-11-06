@@ -1,5 +1,5 @@
-from app.sales import apsn_v1
-from app_utils import empty_string_catcher, is_integer, is_string, check_for_letters
+from modules.app.sales import apsn_v1
+from modules.app_utils import empty_string_catcher, is_integer, is_string, check_for_letters
 from flask import request
 from database.models import Sale, Product
 from flask_restful import Resource, Api
@@ -17,7 +17,7 @@ class Sales(Resource):
     def get(self, sale_id=0):
         if (sale_id):
             sal_id = Sale.view_single_sale(sale_id)
-            if sal_id is False:
+            if len(sal_id)==0:
                 return {'message': 'Sale does not exist'}
             return sal_id
         else:
@@ -60,7 +60,7 @@ class Sales(Resource):
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
         except Exception:
-            return {'message': 'Something went wrong with your inputs: Please review them'}, 400
+            return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 
 
 API.add_resource(Sales, '/sales', '/sales/<int:sale_id>')

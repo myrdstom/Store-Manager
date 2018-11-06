@@ -1,5 +1,5 @@
-from app.products import apcn_v1
-from app_utils import ValidateProductData
+from modules.app.products import apcn_v1
+from modules.app_utils import ValidateProductData
 from flask import request
 from database.models import Product
 from flask_restful import Resource, Api
@@ -48,7 +48,7 @@ class Products(Resource):
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
         except Exception:
-            return {'message': 'Something went wrong with your inputs: Please review them'}, 400
+            return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 
     @jwt_required
     def put(self, product_id):
@@ -65,13 +65,13 @@ class Products(Resource):
                 if product_data.validate_product_data():
                     return {"message": "Please review the values added"}, 400
                 product = Product.update_product(product_name, unit_price, stock, product_id)
-                if product is False:
+                if len(product) == 0:
                     return {'message': 'no such entry found'}, 400
                 return product, 201
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
         except:
-            return {'message': 'Something went wrong with your inputs: Please review them'}, 400
+            return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 
     @jwt_required
     def delete(self, product_id):
@@ -80,7 +80,7 @@ class Products(Resource):
         if role == "store-owner":
             if Product.delete_single_product(product_id):
                 return {'message': 'Record successfully deleted'}, 200
-            return {'message': 'Product does not exist'}, 400
+            return {'message': 'Product does not exist'}, 200
         else:
             return {'message': 'you are not authorized to view this resource'}, 409
 

@@ -1,10 +1,9 @@
 import unittest
 import json
-from flask_jwt_extended import JWTManager
-from Instance.config import TestingConfig
+from modules.Instance.config import TestingConfig
 from database.db import DBHandler
 from flask import current_app as app
-from app import create_app
+from modules.app import create_app
 
 
 class BaseTestCase(unittest.TestCase):
@@ -24,35 +23,39 @@ class BaseTestCase(unittest.TestCase):
 
         self.admin_user = {
             'username': 'admin',
-            'password': 'password'
+            'password': 'password',
+            'email': 'admin@gmail.com'
         }
 
         self.user_data = {
 
             'username': 'myrdstom',
-            'password': 'password'
+            'password': 'password',
+            'email': 'nserekopaul@gmail.com'
         }
         self.user_data2 = {
 
             'username': 'bgpeter',
-            'password': 'password'
+            'password': 'password',
+            'email': 'bgpeter@gmail.com'
         }
 
     def create_user(self):
         response = self.client.post("api/v1/signup",
                                     headers={'Content-Type': 'application/json',
-                                                                 'Authorization': 'Bearer ' +
-                                                                                  self.admin_login()[
-                                                                                      'access_token']},
+                                             'Authorization': 'Bearer ' +
+                                                              self.admin_login()[
+                                                                  'access_token']},
                                     data=json.dumps(dict(username="myrdstom",
-                                                         password="password")))
+                                                         password="password",
+                                                         email="nserekopaul@gmail.com")))
         return response
-
 
     def create_second_user(self):
         response = self.client.post("api/v1/signup", content_type='application/json',
                                     data=json.dumps(dict(username="bgpeter",
-                                                         password="password")))
+                                                         password="password",
+                                                         email="bgpeter@gmail.com")))
         return response
 
     def admin_login(self):
@@ -68,12 +71,12 @@ class BaseTestCase(unittest.TestCase):
                                                    self.admin_login()[
                                                        'access_token']},
                          data=json.dumps(dict(username="myrdstom",
-                                              password="password")))
+                                              password="password",
+                                              email="nserekopaul@gmail.com")))
         login_response = self.client.post('api/v1/login', content_type='application/json',
                                           data=json.dumps(self.user_data))
         login_result = json.loads(login_response.data.decode())
         return login_result
-
 
     def tearDown(self):
         handler = DBHandler(app.config['DATABASE_URL'])
