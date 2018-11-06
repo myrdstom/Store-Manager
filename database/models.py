@@ -84,6 +84,15 @@ class Category:
         else:
             return False
 
+    @staticmethod
+    def update_category(category_name, category_id):
+        category = DatabaseUrl.database_url().modify_category(category_name, category_id)
+
+        if category is None:
+            return ()
+        else:
+            return category
+
 
 class Product:
     def __init__(self, product_name, unit_price, stock, category_name):
@@ -109,8 +118,8 @@ class Product:
             return dict(product_id=product[0], product_name=product[1], unitprice=product[2], stock=product[3], category_name = product[4])
 
     @staticmethod
-    def update_product(product_name, unit_price, stock, product_id, category_name):
-        product = DatabaseUrl.database_url().modify_products(product_name, unit_price, stock, product_id, category_name)
+    def update_product(product_name, unit_price, stock, category_name, product_id):
+        product = DatabaseUrl.database_url().modify_products(product_name, unit_price, stock, category_name, product_id)
 
         if product is None:
             return ()

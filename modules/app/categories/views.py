@@ -10,32 +10,62 @@ API = Api(apca_v1)
 
 
 class Categories(Resource):
+    @jwt_required
     def get(self):
-        category = Category.view_categories()
-        if len(category) == 0:
-            return {'message': 'There are no values in the database'}, 200
-        return category
+        role = get_jwt_identity()['role']
+        if role == "store-owner":
+            category = Category.view_categories()
+            if len(category) == 0:
+                return {'message': 'There are no values in the database'}, 200
+            return category
+        else:
+            return {'message': 'you are not authorized to view this resource'}, 409
 
+    @jwt_required
     def post(self):
-        data = request.get_json()
-        categoryname = data['category_name']
-        category_name = categoryname.lower()
-        category_data = ValidateCategoryData(category_name)
-        if category_data.validate_category_data():
-            return {"message": "Please review the values added"}, 400
-        if Category.find_category_by_name(category_name):
-            return {'message': 'A product with that product name already exists'}, 409
-        category = Category(category_name)
-        category.insert_category()
-        return {'message': 'category created', 'category_name': category_name}, 201
+        role = get_jwt_identity()['role']
+        if role == "store-owner":
+            data = request.get_json()
+            categoryname = data['category_name']
 
-    def put(self):
-        pass
+            category_data = ValidateCategoryData(categoryname)
+            if category_data.validate_category_data():
+                return {"message": "Please review the values added"}, 400
+            category_name = categoryname.lower()
+            if Category.find_category_by_name(category_name):
+                return {'message': 'A category with that product name already exists'}, 409
+            category = Category(category_name)
+            category.insert_category()
+            return {'message': 'category created', 'category_name': category_name}, 201
+        else:
+            return {'message': 'you are not authorized to view this resource'}, 409
 
+    @jwt_required
+    def put(self, category_id):
+        role = get_jwt_identity()['role']
+        if role == "store-owner":
+            data = request.get_json()
+            categoryname = data['category_name']
+            category_name = categoryname.lower()
+            category_data = ValidateCategoryData(category_name)
+            if category_data.validate_category_data():
+                return {"message": "Please review the values added"}, 400
+            category = Category.update_category(category_name, category_id)
+            if len(category) == 0:
+                return {'message': 'no such entry found'}, 400
+            return category, 201
+        else:
+            return {'message': 'you are not authorized to view this resource'}, 409
+
+    @jwt_required
     def delete(self, category_id):
-        if Category.delete_single_category(category_id):
-            return {'message': 'Record successfully deleted'}, 200
-        return {'message': 'Product does not exist'}, 200
+        role = get_jwt_identity()['role']
+        if role == "store-owner":
+            if Category.delete_single_category(category_id):
+                return {'message': 'Record successfully deleted'}, 200
+            return {'message': 'Product does not exist'}, 200
+        else:
+            return {'message': 'you are not authorized to view this resource'}, 409
 
 
 API.add_resource(Categories, '/categories', '/categories/<int:category_id>')

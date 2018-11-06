@@ -49,7 +49,7 @@ class DBHandler:
                      "unit_price INT NOT NULL, " \
                      "stock INT NOT NULL," \
                      "category_name varchar NOT NULL, " \
-                     "FOREIGN KEY (category_name) REFERENCES categories(category_name) ON DELETE CASCADE)"
+                     "FOREIGN KEY (category_name) REFERENCES categories(category_name) ON DELETE CASCADE ON UPDATE CASCADE)"
         self.cur.execute(statement3)
 
         statement4 = "CREATE TABLE IF NOT EXISTS sales (" \
@@ -115,10 +115,17 @@ class DBHandler:
 
     """Function to update category"""
 
-    def modify_stock(self, category_name, category_id):
+    def modify_category(self, category_name, category_id):
         self.cur.execute(
             "UPDATE categories SET category_name=%s WHERE category_id=%s",
             (category_name, category_id))
+        self.cur.execute(
+            "SELECT category_name FROM categories WHERE category_id=%s", (category_id,))
+        req = self.cur.fetchone()
+        if req is None:
+            return None
+        category_dict = {"category_name": req[0]}
+        return category_dict
 
 
     def view_all_categories(self):
@@ -142,17 +149,17 @@ class DBHandler:
                          "VALUES( '{}', '{}', '{}', '{}');".format
                          (product_name, unit_price, stock, category_name))
 
-    def modify_products(self, product_name, unit_price, stock, product_id, category_name):
+    def modify_products(self, product_name, unit_price, stock, category_name, product_id ):
         self.cur.execute(
             "UPDATE products SET product_name=%s, unit_price=%s, stock=%s, category_name=%s WHERE product_id=%s",
-            (product_name, unit_price, stock, product_id, category_name))
+            (product_name, unit_price, stock, category_name, product_id))
         self.cur.execute(
-            "SELECT product_name, unit_price, stock FROM products WHERE product_id=%s, category_name=%s", (product_id,))
+            "SELECT product_name, unit_price, stock, category_name FROM products WHERE product_id=%s", (product_id,))
         req = self.cur.fetchone()
         if req is None:
             return None
         product_dict = {"product_name": req[0], "unit_price": req[1],
-                        "stock": req[2], "category_name=%s": req[3]}
+                        "stock": req[2], "category_name": req[3]}
 
         return product_dict
 

@@ -120,7 +120,7 @@ class FlaskTestCase(BaseTestCase):
                                                                                        'access_token']},
                                    data=json.dumps(category_data))
             self.assertEqual(response.status_code, 201)
-            response1 = client.put('/api/v1/categories/100', headers={'Content-Type': 'application/json',
+            response1 = client.put('/api/v1/categories/1', headers={'Content-Type': 'application/json',
                                                                     'Authorization': 'Bearer ' +
                                                                                      self.login_user()[
                                                                                          'access_token']},
