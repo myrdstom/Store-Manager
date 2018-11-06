@@ -63,7 +63,7 @@ class Categories(Resource):
         if role == "store-owner":
             if Category.delete_single_category(category_id):
                 return {'message': 'Record successfully deleted'}, 200
-            return {'message': 'Product does not exist'}, 200
+            return {'message': 'Category does not exist'}, 200
         else:
             return {'message': 'you are not authorized to view this resource'}, 409
 
