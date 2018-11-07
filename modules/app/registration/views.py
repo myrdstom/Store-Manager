@@ -17,39 +17,39 @@ class Registration(Resource):
     @swag_from("../docs/signup.yml")
     def post(self):
         role = get_jwt_identity()['role']
-        if role == "store-owner":
-            data = request.get_json()
-            username = data['username']
-            password = generate_password_hash(data['password'], method='sha256')
-            email = data['email']
-            user_data = ValidateUserData(username, password, email)
-            if user_data.validate_user():
-                return {"message": "Please review the values added"}, 400
-            if User.get_by_username(username) or User.get_by_email(email):
-                return {'message': 'A user with those credentials already exists'}, 409
-            else:
-                user = User(username, password, email, role)
-                user.insert_user()
-                return {'message': 'User successfully registered', "username": username}, 201
-        else:
+        if role != "store-owner":
             return {'message': 'you are not authorized to view this resource'}, 409
+        data = request.get_json()
+        username = data['username']
+        password = generate_password_hash(data['password'], method='sha256')
+        email = data['email']
+        user_data = ValidateUserData(username, password, email)
+        if user_data.validate_user():
+            return {"message": "Please review the values added"}, 400
+        if User.get_by_username(username) or User.get_by_email(email):
+            return {'message': 'A user with those credentials already exists'}, 409
+        else:
+            user = User(username, password, email, role)
+            user.insert_user()
+            return {'message': 'User successfully registered', "username": username}, 201
+
 
     @jwt_required
     def put(self, userId):
         current_user = get_jwt_identity()['role']
-        if current_user == "store-owner":
-            data = request.get_json()
-            new_role = data['role']
-            role = new_role.lower()
-            user = User.update_user_role(role, userId)
-            if len(user) == 0:
-                return {'message': 'User does not exist'}, 400
-            if role == 'store-owner' or role == 'shop-attendant':
-                return {'message': 'User has been promoted'}, 200
-            else:
-                return {'message': 'Invalid role, please try again'}, 400
-        else:
+        if current_user != "store-owner":
             return {'message': 'you are not authorized to view this resource'}, 400
+        data = request.get_json()
+        new_role = data['role']
+        role = new_role.lower()
+        user = User.update_user_role(role, userId)
+        if len(user) == 0:
+            return {'message': 'User does not exist'}, 400
+        if role == 'store-owner' or role == 'shop-attendant':
+            return {'message': 'User has been promoted'}, 200
+        else:
+            return {'message': 'Invalid role, please try again'}, 400
+
 
 
 class Login(Resource):

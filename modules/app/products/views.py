@@ -59,25 +59,24 @@ class Products(Resource):
         """This function lets the administrator edit a product"""
         try:
             role = get_jwt_identity()['role']
-            if role == "store-owner":
-                data = request.get_json()
-                productname = data['product_name']
-                unit_price = data['unit_price']
-                stock = data['stock']
-                category_name = data['category_name']
-                product_data = ValidateProductData(productname, unit_price, stock)
-                if product_data.validate_product_data():
-                    return {"message": "Please review the values added"}, 400
-                product_name = productname.lower()
-                if Category.find_category_by_name(category_name):
-                    product = Product.update_product(product_name, unit_price, stock, category_name, product_id)
-                    if len(product) == 0:
-                        return {'message': 'no such entry found'}, 400
-                    return product, 201
-                else:
-                    return {'message': 'Category does not exist'}, 400
-            else:
+            if role != "store-owner":
                 return {'message': 'you are not authorized to view this resource'}, 409
+            data = request.get_json()
+            productname = data['product_name']
+            unit_price = data['unit_price']
+            stock = data['stock']
+            category_name = data['category_name']
+            product_data = ValidateProductData(productname, unit_price, stock)
+            if product_data.validate_product_data():
+                return {"message": "Please review the values added"}, 400
+            product_name = productname.lower()
+            if Category.find_category_by_name(category_name):
+                product = Product.update_product(product_name, unit_price, stock, category_name, product_id)
+                if len(product) == 0:
+                    return {'message': 'no such entry found'}, 400
+                return product, 201
+            else:
+                return {'message': 'Category does not exist'}, 400
         except Exception:
             return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 

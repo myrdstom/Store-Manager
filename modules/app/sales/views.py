@@ -32,34 +32,34 @@ class Sales(Resource):
         try:
             current_user = get_jwt_identity()['username']
             role = get_jwt_identity()['role']
-            if role == "shop-attendant":
-                data = request.get_json()
-                productname = data['product_name']
-                username = current_user
-                quantity = data['quantity']
-
-                if not is_integer(quantity) or not is_string(productname) or not empty_string_catcher(productname) or \
-                        check_for_letters(productname) or quantity < 0:
-                    return {'message': 'Error:Invalid value added, please review'}, 400
-                product_name = productname.lower()
-                product_identity = Product.view_single_product_by_name(product_name)
-                if product_identity:
-                    available_stock = product_identity['stock']
-                    unit_price = product_identity['unitprice']
-                    product_name = product_identity['product_name']
-                    total = data['quantity'] * unit_price
-                    if available_stock < quantity:
-                        return {'message': 'not enough in stock for you to purchase that amount'}, 400
-                    stock = available_stock - quantity
-                else:
-                    return {'message': 'Product does not exist'}, 400
-                Sale.update_stock(stock, product_name)
-                sale_items = Sale(username=username, product_name=product_name, quantity=quantity,
-                                  total=total)
-                sale_items.insert_sale()
-                return {'message': 'sale created'}, 201
-            else:
+            if role != "shop-attendant":
                 return {'message': 'you are not authorized to view this resource'}, 409
+            data = request.get_json()
+            productname = data['product_name']
+            username = current_user
+            quantity = data['quantity']
+
+            if not is_integer(quantity) or not is_string(productname) or not empty_string_catcher(productname) or \
+                    check_for_letters(productname) or quantity < 0:
+                return {'message': 'Error:Invalid value added, please review'}, 400
+            product_name = productname.lower()
+            product_identity = Product.view_single_product_by_name(product_name)
+            if product_identity:
+                available_stock = product_identity['stock']
+                unit_price = product_identity['unitprice']
+                product_name = product_identity['product_name']
+                total = data['quantity'] * unit_price
+                if available_stock < quantity:
+                    return {'message': 'not enough in stock for you to purchase that amount'}, 400
+                stock = available_stock - quantity
+            else:
+                return {'message': 'Product does not exist'}, 400
+            Sale.update_stock(stock, product_name)
+            sale_items = Sale(username=username, product_name=product_name, quantity=quantity,
+                              total=total)
+            sale_items.insert_sale()
+            return {'message': 'sale created'}, 201
+
         except Exception:
             return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 
