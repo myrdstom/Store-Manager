@@ -1,5 +1,5 @@
 from modules.app.registration import auth_v1
-from modules.app_utils import ValidateUserData, is_string, email_validator, empty_string_catcher
+from modules.app_utils import ValidateUserData, is_string, empty_string_catcher
 from flask import request
 from database.models import User
 from flask_restful import Resource, Api

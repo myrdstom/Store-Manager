@@ -110,6 +110,25 @@ class FlaskTestCase(BaseTestCase):
             responseJson = json.loads(response1.data.decode())
             self.assertIn('no such entry found', responseJson['message'])
 
+    """Test editing a category with wrong values"""
+
+    def test_edit_a_category_with_wrong_values(self):
+        with self.app.test_client() as client:
+            response = client.post('/api/v1/categories', headers={'Content-Type': 'application/json',
+                                                                  'Authorization': 'Bearer ' +
+                                                                                   self.admin_login()[
+                                                                                       'access_token']},
+                                   data=json.dumps(category_data))
+            self.assertEqual(response.status_code, 201)
+            response1 = client.put('/api/v1/categories/1', headers={'Content-Type': 'application/json',
+                                                                      'Authorization': 'Bearer ' +
+                                                                                       self.admin_login()[
+                                                                                           'access_token']},
+                                   data=json.dumps(dict(category_name=888)))
+            self.assertEqual(response1.status_code, 400)
+            responseJson = json.loads(response1.data.decode())
+            self.assertIn('Please review the values added', responseJson['message'])
+
     """Test authority to edit a category"""
 
     def test_authority_to_edit(self):

@@ -46,10 +46,10 @@ class Categories(Resource):
         if role == "store-owner":
             data = request.get_json()
             categoryname = data['category_name']
-            category_name = categoryname.lower()
-            category_data = ValidateCategoryData(category_name)
+            category_data = ValidateCategoryData(categoryname)
             if category_data.validate_category_data():
                 return {"message": "Please review the values added"}, 400
+            category_name = categoryname.lower()
             category = Category.update_category(category_name, category_id)
             if len(category) == 0:
                 return {'message': 'no such entry found'}, 400

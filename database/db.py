@@ -26,42 +26,44 @@ class DBHandler:
     '''Create tables'''
 
     def create_tables(self):
-        # try:
-        statement = "CREATE TABLE IF NOT EXISTS users (" \
-                    "userId SERIAL PRIMARY KEY , " \
-                    "username varchar NOT NULL UNIQUE, " \
-                    "password varchar NOT NULL, " \
-                    "email varchar NOT NULL UNIQUE, " \
-                    "role varchar NOT NULL); " \
-                    "INSERT INTO users(username, password, email, role) " \
-                    "SELECT 'admin', 'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0', " \
-                    "'admin@gmail.com','store-owner' WHERE NOT EXISTS (SELECT * FROM users WHERE username='admin');"
-        self.cur.execute(statement)
+        try:
+            statement = "CREATE TABLE IF NOT EXISTS users (" \
+                        "userId SERIAL PRIMARY KEY , " \
+                        "username varchar NOT NULL UNIQUE, " \
+                        "password varchar NOT NULL, " \
+                        "email varchar NOT NULL UNIQUE, " \
+                        "role varchar NOT NULL); " \
+                        "INSERT INTO users(username, password, email, role) " \
+                        "SELECT 'admin', " \
+                        "'sha256$v4XQKUWM$d11b300ec58696a119fc3f5bd5b0f07d64b49d2b56a7c1b2c8baed86ccec81e0', " \
+                        "'admin@gmail.com','store-owner' WHERE NOT EXISTS (SELECT * FROM users WHERE username='admin');"
+            self.cur.execute(statement)
 
-        statement2 = "CREATE TABLE IF NOT EXISTS categories (" \
-                     "category_id SERIAL PRIMARY KEY , " \
-                     "category_name varchar NOT NULL UNIQUE)"
-        self.cur.execute(statement2)
+            statement2 = "CREATE TABLE IF NOT EXISTS categories (" \
+                         "category_id SERIAL PRIMARY KEY , " \
+                         "category_name varchar NOT NULL UNIQUE)"
+            self.cur.execute(statement2)
 
-        statement3 = "CREATE TABLE IF NOT EXISTS products (" \
-                     "product_id SERIAL PRIMARY KEY , " \
-                     "product_name varchar NOT NULL, " \
-                     "unit_price INT NOT NULL, " \
-                     "stock INT NOT NULL," \
-                     "category_name varchar NOT NULL, " \
-                     "FOREIGN KEY (category_name) REFERENCES categories(category_name) ON DELETE CASCADE ON UPDATE CASCADE)"
-        self.cur.execute(statement3)
+            statement3 = "CREATE TABLE IF NOT EXISTS products (" \
+                         "product_id SERIAL PRIMARY KEY , " \
+                         "product_name varchar NOT NULL, " \
+                         "unit_price INT NOT NULL, " \
+                         "stock INT NOT NULL," \
+                         "category_name varchar NOT NULL, " \
+                         "FOREIGN KEY (category_name) REFERENCES categories(category_name) ON DELETE CASCADE " \
+                         "ON UPDATE CASCADE)"
+            self.cur.execute(statement3)
 
-        statement4 = "CREATE TABLE IF NOT EXISTS sales (" \
-                     "sale_id SERIAL PRIMARY KEY , " \
-                     "username varchar NOT NULL, " \
-                     "product_name varchar NOT NULL, " \
-                     "quantity INT NOT NULL, " \
-                     "total INT NOT NULL)"
-        self.cur.execute(statement4)
-        # except Exception:
-        #     print("failed to create user table")
-        #     self.conn.rollback()
+            statement4 = "CREATE TABLE IF NOT EXISTS sales (" \
+                         "sale_id SERIAL PRIMARY KEY , " \
+                         "username varchar NOT NULL, " \
+                         "product_name varchar NOT NULL, " \
+                         "quantity INT NOT NULL, " \
+                         "total INT NOT NULL)"
+            self.cur.execute(statement4)
+        except Exception:
+            print("failed to create user table")
+            self.conn.rollback()
 
     '''Functions to handle users and authentication'''
 
@@ -104,10 +106,10 @@ class DBHandler:
 
         return user_dict
 
-
     """Functions to handle Categories"""
 
     """Function to create a category"""
+
     def create_category(self, category_name):
         self.cur.execute("INSERT INTO categories (category_name) "
                          "VALUES( '{}');".format
@@ -127,7 +129,6 @@ class DBHandler:
         category_dict = {"category_name": req[0]}
         return category_dict
 
-
     def view_all_categories(self):
         statement = "SELECT category_id, category_name FROM categories;"
         self.cur.execute(statement)
@@ -141,7 +142,6 @@ class DBHandler:
             category_dict = {}
         return category_list
 
-
     '''Functions to handle Products'''
 
     def create_product(self, product_name, unit_price, stock, category_name):
@@ -149,7 +149,7 @@ class DBHandler:
                          "VALUES( '{}', '{}', '{}', '{}');".format
                          (product_name, unit_price, stock, category_name))
 
-    def modify_products(self, product_name, unit_price, stock, category_name, product_id ):
+    def modify_products(self, product_name, unit_price, stock, category_name, product_id):
         self.cur.execute(
             "UPDATE products SET product_name=%s, unit_price=%s, stock=%s, category_name=%s WHERE product_id=%s",
             (product_name, unit_price, stock, category_name, product_id))

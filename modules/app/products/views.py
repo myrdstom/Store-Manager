@@ -49,7 +49,7 @@ class Products(Resource):
                     return {'message': 'product created', 'product_name': product_name,
                             'unit_price': unit_price, 'stock': stock}, 201
                 else:
-                    return {'message':'category does not exist'}, 400
+                    return {'message': 'category does not exist'}, 400
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
         except Exception:
@@ -76,7 +76,7 @@ class Products(Resource):
                         return {'message': 'no such entry found'}, 400
                     return product, 201
                 else:
-                    return {'message':'Category does not exist'}
+                    return {'message': 'Category does not exist'}, 400
             else:
                 return {'message': 'you are not authorized to view this resource'}, 409
         except Exception:

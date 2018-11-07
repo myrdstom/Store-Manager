@@ -17,7 +17,7 @@ class Sales(Resource):
     def get(self, sale_id=0):
         if (sale_id):
             sal_id = Sale.view_single_sale(sale_id)
-            if len(sal_id)==0:
+            if len(sal_id) == 0:
                 return {'message': 'Sale does not exist'}
             return sal_id
         else:
@@ -39,7 +39,7 @@ class Sales(Resource):
                 quantity = data['quantity']
 
                 if not is_integer(quantity) or not is_string(productname) or not empty_string_catcher(productname) or \
-                        check_for_letters(productname)or quantity < 0:
+                        check_for_letters(productname) or quantity < 0:
                     return {'message': 'Error:Invalid value added, please review'}, 400
                 product_name = productname.lower()
                 product_identity = Product.view_single_product_by_name(product_name)
@@ -49,7 +49,7 @@ class Sales(Resource):
                     product_name = product_identity['product_name']
                     total = data['quantity'] * unit_price
                     if available_stock < quantity:
-                        return {'message':'not enough in stock for you to purchase that amount'}, 400
+                        return {'message': 'not enough in stock for you to purchase that amount'}, 400
                     stock = available_stock - quantity
                 else:
                     return {'message': 'Product does not exist'}, 400

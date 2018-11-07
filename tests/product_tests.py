@@ -191,6 +191,28 @@ class FlaskTestCase(BaseTestCase):
             responseJson = json.loads(response.data.decode())
             self.assertIn('Please review the values added', responseJson['message'])
 
+    """Testing non-exsiting category when creating a POST"""
+    def test_non_existent_POST_category(self):
+        with self.app.test_client() as client:
+            category = client.post('/api/v1/categories', headers={'Content-Type': 'application/json',
+                                                                  'Authorization': 'Bearer ' +
+                                                                                   self.admin_login()[
+                                                                                       'access_token']},
+                                   data=json.dumps(category_data))
+            self.assertEqual(category.status_code, 201)
+            response = client.post('/api/v1/products',
+                                   headers={'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' +
+                                                             self.admin_login()[
+                                                                 'access_token']},
+                                   data=json.dumps(dict(product_name="acer",
+                                                        unit_price=19000000,
+                                                        stock=100,
+                                                        category_name="laptops")))
+            self.assertEqual(response.status_code, 400)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn('category does not exist', responseJson['message'])
+
     """GET endpoint"""
 
     """test empty product data"""
@@ -245,8 +267,6 @@ class FlaskTestCase(BaseTestCase):
             self.assertEqual(response.status_code, 200)
 
 
-        """Testing for missing POST column"""
-
 
         """Testing the edit product endpoint"""
 
@@ -276,6 +296,34 @@ class FlaskTestCase(BaseTestCase):
             self.assertEqual(response.status_code, 201)
             responseJson = json.loads(response.data.decode())
             self.assertIn("water", responseJson['product_name'])
+
+    """Test Category does not exist"""
+    def test_edit_non_existent_category(self):
+        with self.app.test_client() as client:
+            category = client.post('/api/v1/categories', headers={'Content-Type': 'application/json',
+                                                                  'Authorization': 'Bearer ' +
+                                                                                   self.admin_login()[
+                                                                                       'access_token']},
+                                   data=json.dumps(category_data))
+            self.assertEqual(category.status_code, 201)
+            response1 = client.post('/api/v1/products', headers={'Content-Type': 'application/json',
+                                                                 'Authorization': 'Bearer ' +
+                                                                                  self.admin_login()[
+                                                                                      'access_token']},
+                                    data=json.dumps(product_data))
+            self.assertEqual(response1.status_code, 201)
+            response = client.put('/api/v1/products/1',
+                                  headers={'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' +
+                                                            self.admin_login()[
+                                                                'access_token']},
+                                  data=json.dumps(dict(product_name="water",
+                                                       unit_price=2000,
+                                                       stock=100,
+                                                       category_name="laptops")))
+            self.assertEqual(response.status_code, 400)
+            responseJson = json.loads(response.data.decode())
+            self.assertIn("Category does not exist", responseJson['message'])
 
     """Test authority to access this endpoint"""
     def test_authority_to_edit(self):
