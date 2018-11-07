@@ -30,28 +30,27 @@ class Products(Resource):
         """This function lets the administrator add a new product to the inventory"""
         try:
             role = get_jwt_identity()['role']
-            if role == "store-owner":
-                data = request.get_json()
-                productname = data['product_name']
-                unit_price = data['unit_price']
-                stock = data['stock']
-                category_name = data['category_name']
-                product_data = ValidateProductData(productname, unit_price, stock)
-                if product_data.validate_product_data():
-                    return {"message": "Please review the values added"}, 400
-                product_name = productname.lower()
-                if Product.find_product_by_name(product_name):
-                    return {'message': 'A product with that product name already exists'}, 409
-                category_identity = Category.find_category_by_name(category_name)
-                if category_identity:
-                    product = Product(product_name = product_name, unit_price=unit_price, stock=stock, category_name=category_name)
-                    product.insert_product()
-                    return {'message': 'product created', 'product_name': product_name,
-                            'unit_price': unit_price, 'stock': stock}, 201
-                else:
-                    return {'message': 'category does not exist'}, 400
-            else:
+            if role != "store-owner":
                 return {'message': 'you are not authorized to view this resource'}, 409
+            data = request.get_json()
+            productname = data['product_name']
+            unit_price = data['unit_price']
+            stock = data['stock']
+            category_name = data['category_name']
+            product_data = ValidateProductData(productname, unit_price, stock)
+            if product_data.validate_product_data():
+                return {"message": "Please review the values added"}, 400
+            product_name = productname.lower()
+            if Product.find_product_by_name(product_name):
+                return {'message': 'A product with that product name already exists'}, 409
+            category_identity = Category.find_category_by_name(category_name)
+            if category_identity:
+                product = Product(product_name = product_name, unit_price=unit_price, stock=stock, category_name=category_name)
+                product.insert_product()
+                return {'message': 'product created', 'product_name': product_name,
+                        'unit_price': unit_price, 'stock': stock}, 201
+            else:
+                return {'message': 'category does not exist'}, 400
         except Exception:
             return {'message': 'Something went wrong with your inputs: Please review them'}, 409
 
