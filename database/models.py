@@ -95,14 +95,15 @@ class Category:
 
 
 class Product:
-    def __init__(self, product_name, unit_price, stock, category_name):
-        self.product_name = product_name
-        self.unit_price = unit_price
-        self.stock = stock
-        self.category_name = category_name
+    def __init__(self, **kwargs):
+        self.product_name = kwargs.get('product_name')
+        self.unit_price = kwargs.get('unit_price')
+        self.stock = kwargs.get('stock')
+        self.category_name = kwargs.get('category_name')
 
     def insert_product(self):
-        product = DatabaseUrl.database_url().create_product(self.product_name, self.unit_price, self.stock, self.category_name)
+        product = DatabaseUrl.database_url().create_product(self.product_name, self.unit_price, self.stock,
+                                                            self.category_name)
 
         if product is None:
             return ()
