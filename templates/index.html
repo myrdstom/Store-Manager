@@ -24,7 +24,7 @@
     <div id="auth-row" >
         <h1>LOGIN</h1>
     </div>
-    <form action="dashboard.html" class="form-box">
+    <form action="" class="form-box" id="signin">
     <label for="uname">Username:</label>
 
     <input type="text" id="uname" name="uname" placeholder="Your name.." required = "">
@@ -37,6 +37,40 @@
   </form>
 
 </div>
+<script>
+        document.getElementById("signin").addEventListener("submit", signIn)
+    function signIn(e) {
+        e.preventDefault();
+        let username = document.getElementById('uname').value;
+        let password = document.getElementById('pass').value;
+        // console.log(display_name);
+        fetch('http://127.0.0.1:5000/api/v1/login', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then((res) => res.json())
+            // .then((data) => console.log(data))
+            // window.location.replace(login.html)
+            .then((data) => {
+                console.log(data);
+                if ("Token" in data) {
+                    localStorage.setItem("access_token", data.Token);
+                    localStorage.setItem("username", username);
+                    console.log(data);
+                    window.location.href = 'dashboard.html'
+                } else {
+                    alert(data.message);
+                }
+            })
+    }
+</script>
 
 
 

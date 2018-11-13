@@ -7,6 +7,7 @@ from modules.app.categories import apca_v1
 from flask_jwt_extended import JWTManager
 import datetime
 from flasgger import Swagger
+from flask_cors import CORS
 
 
 def create_app():
@@ -16,6 +17,7 @@ def create_app():
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(minutes=100)
     JWTManager(app)
     Swagger(app)
+    CORS(app)
 
     @app.errorhandler(404)
     def not_found(e):
