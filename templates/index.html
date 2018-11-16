@@ -24,21 +24,21 @@
     <div id="auth-row" >
         <h1>LOGIN</h1>
     </div>
-    <form action="" class="form-box" id="signin">
-    <label for="uname">Username:</label>
+    <form action="" class="form-box" id="signin" >
+        <label for="uname">Username:</label>
 
-    <input type="text" id="uname" name="uname" placeholder="Your name.." required = "">
-        <br>
-    <label for="pass">Password: </label>
-    <input type="password" id="pass" name="password" placeholder="Your password.." required="">
-        <br>
-    <input type="submit" value="Submit" class="btn-submit">
+        <input type="text" id="uname" name="uname" placeholder="Your name.." required = "">
+            <br>
+        <label for="pass">Password: </label>
+        <input type="password" id="pass" name="password" placeholder="Your password.." required="">
+            <br>
+        <input type="submit" value="Submit" class="btn-submit">
 
-  </form>
+    </form>
 
 </div>
 <script>
-        document.getElementById("signin").addEventListener("submit", signIn)
+    document.getElementById("signin").addEventListener("submit", signIn);
     function signIn(e) {
         e.preventDefault();
         let username = document.getElementById('uname').value;
@@ -56,20 +56,19 @@
                 })
             })
             .then((res) => res.json())
-            // .then((data) => console.log(data))
-            // window.location.replace(login.html)
             .then((data) => {
-                console.log(data);
-                if ("Token" in data) {
-                    localStorage.setItem("access_token", data.Token);
-                    localStorage.setItem("username", username);
-                    console.log(data);
-                    window.location.href = 'dashboard.html'
+               console.log(data);
+               if ("access_token" in data) {
+                    // localStorage.setItem("access_token", data.access_token);
+                    // localStorage.setItem("username", username);
+                    //console.log(data);
+                    window.open("https://www.google.com", "GoogleHomePage");
                 } else {
                     alert(data.message);
                 }
             })
     }
+
 </script>
 
 
