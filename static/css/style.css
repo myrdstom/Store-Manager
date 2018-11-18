@@ -444,3 +444,8 @@ tr:last-of-type td:last-child {
     .navbar-nav{display: none}
 
 }
+
+
+.list-group-item{
+    width: 20%;
+}

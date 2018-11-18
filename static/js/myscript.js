@@ -16,7 +16,6 @@ function openSlideMenu() {
     document.getElementById('side-menu-link').style.display='inline-block';
     document.getElementById('side-menu-link3').style.display='inline-block';
     document.getElementById('side-menu-link4').style.display='inline-block';
-    document.getElementById('side-menu-link5').style.display='inline-block';
 
 }
 function closeSlideMenu() {
@@ -27,7 +26,6 @@ function closeSlideMenu() {
     document.getElementById('side-menu-link').style.display='none';
     document.getElementById('side-menu-link3').style.display='none';
     document.getElementById('side-menu-link4').style.display='none';
-    document.getElementById('side-menu-link5').style.display='none';
 
 }
 

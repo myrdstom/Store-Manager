@@ -21,161 +21,92 @@
         <br>
         <a href="sales.html" ><img src="../static/images/reports.png" alt="" class="favicon"><span id="side-menu-link3">Sales</span></a>
     </div>
+
     <div id="main">
         <span class="navbartoggle opened" id="open-slide" style="font-size:30px;cursor:pointer;margin-top:-80px;position:absolute;">
             &#9776;
         </span>
         <div id="main">
+
+
         <label id="report-label">Products Available</label>
         <br>
         <input type="text" id="myInput"  placeholder="Filter inventory.">
         <div id="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Action</th>
-              <th>Product Name</th>
-              <th>Units Available</th>
-              <th>Units Purchased</th>
-              <th>Price Per Unit</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-                <td>
-                    <input type="radio">
-                </td>
-              <td><strong>HP Envy</strong></td>
-              <td>200</td>
-              <td>
-                  <select>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                  </select>
-              </td>
-              <td>2000000.00</td>
-
-            </tr>
-            <tr>
-              <td>
-                  <input type="radio">
-              </td>
-              <td><strong>Ram Chips</strong></td>
-              <td>2000</td>
-              <td>
-                  <select>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                  </select>
-              </td>
-              <td>40000.00</td>
-            </tr>
-            <tr>
-               <td>
-                  <input type="radio">
-              </td>
-              <td><strong>LG XM-260 Optical Mouse</strong></td>
-              <td>780</td>
-              <td>
-                  <select>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                  </select>
-              </td>
-              <td>15000.00</td>
-            </tr>
-            <tr>
-               <td>
-                  <input type="radio">
-              </td>
-              <td><strong>toshiba satellite s55t-c5325-4k</strong></td>
-              <td>48</td>
-              <td>
-                  <select>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                  </select>
-              </td>
-              <td>3800000</td>
-            </tr>
-            <tr>
-               <td>
-                  <input type="radio">
-              </td>
-              <td><strong>Acer Aspire R7-572-5893</strong></td>
-              <td>132</td>
-              <td>
-                  <select>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                  </select>
-              </td>
-              <td>1200000.00</td>
-            </tr>
-            <tr>
-               <td>
-                  <input type="radio">
-              </td>
-              <td><strong>Lenovo V130</strong></td>
-              <td>48</td>
-              <td>
-                  <select>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                  </select>
-              </td>
-              <td>1400000.00</td>
-            </tr>
-            <tr>
-               <td>
-                  <input type="radio">
-              </td>
-              <td><strong>Asus ROG Strix GL703GS</strong></td>
-              <td>12</td>
-              <td>
-                  <select>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                  </select>
-              </td>
-              <td>8000000.00</td>
-            </tr>
-          </tbody>
-        </table>
+            <table>
+              <thead>
+             <tr>
+                  <th>Shop attendant</th>
+                  <th>Product Sold</th>
+                  <th>Price Per Unit</th>
+                  <th>quantity Sold</th>
+                  <th>Total Price</th>
+                </tr>
+              </thead>
+            </table>
+        <div id="output"></div>
         <div class="admin-btn">
+
             <input type="submit" value="Delete" class="btn-btn-submit">
             <a href="add-item.html"><input type="submit" value="Add" class="btn-btn-submit"></a>
             <a href="edit-item.html"><input type="submit" value="Edit" class="btn-btn-submit"></a>
-            <a href="cart.html"><input type="submit" value="Add-To-Cart" class="btn-btn-submit"></a>
+            <input type="submit" value="Get Products" id="getText" class="btn-btn-submit">
         </div>
         </div>
     </div>
     </div>
+
     <nav class="navbar-bottom">
             <h2>Store Manager © 2018 . All Rights Reserved.</h2>
     </nav>
     <script src="../static/js/myscript.js"></script>
+    <script>
+        document.getElementById('getText').addEventListener('click', getProducts);
+        function getProducts(){
+            fetch('http://127.0.0.1:5000/api/v1/products',{
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
+                }
+            })
+
+                .then((res) => res.json())
+                    //console.log(res.json());
+                .then((data) => {
+                    console.log(data);
+
+                    if("msg" in data){
+                        alert(data.msg)
+                    }
+                    if ("message" in data){
+                        alert(data.message)
+                    } else {
+                        let output = '<h2> </h2>';
+                        data.forEach(function (product) {
+                            output += `
+                        <table>
+                        <tbody>
+                        <tr >
+                        <td><input type="radio"></td>
+                        <td class = "list-group-item">${product.product_name}</td>
+                        <td class = "list-group-item">${product.unit_price}</td>
+                        <td class = "list-group-item">${product.stock}</td>
+                        <td class = "list-group-item">${product.category_name}</td>
+                        </tr>
+                        </tbody>
+                        </table>
+                        `;
+                        });
+
+
+                        document.getElementById('output').innerHTML = output;
+                    }
+
+                })
+
+        }
+    </script>
 </body>
 </html>
