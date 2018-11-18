@@ -449,3 +449,7 @@ tr:last-of-type td:last-child {
 .list-group-item{
     width: 20%;
 }
+
+.category-list-group-item{
+    width: 63.5%;
+}

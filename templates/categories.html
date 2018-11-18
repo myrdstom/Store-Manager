@@ -33,69 +33,19 @@
         <div id="table-container">
             <table>
               <thead>
-                <tr>
-                  <th>Shop attendant</th>
-                  <th>Product Sold</th>
-                  <th>Price Per Unit</th>
-                  <th>quantity Sold</th>
-                  <th>Total Price</th>
+             <tr>
+                  <th>Action</th>
+                  <th>Category Name</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Aretha Mayangi</strong></td>
-                  <td>HP Envy</td>
-                  <td>2000000.00</td>
-                  <td>10</td>
-                  <td>20000000.00</td>
-                </tr>
-                <tr>
-                  <td><strong>Aretha Mayangi</strong></td>
-                  <td>toshiba satellite s55t-c5325-4k</td>
-                  <td>3800000</td>
-                  <td>20</td>
-                  <td>76000000.00</td>
-                </tr>
-                <tr>
-                  <td><strong>Aretha Mayangi</strong></td>
-                  <td>Soap</td>
-                  <td>2000.00</td>
-                  <td>10</td>
-                  <td>20000.00</td>
-                </tr>
-                <tr>
-                  <td><strong>Aretha Mayangi</strong></td>
-                  <td>LG XM-260 Optical Mouse</td>
-                  <td>15000.00</td>
-                  <td>10</td>
-                  <td>150000.00</td>
-                </tr>
-                <tr>
-                  <td><strong>Aretha Mayangi</strong></td>
-                  <td>Acer Aspire R7-572-5893</td>
-                  <td>1200000.00</td>
-                  <td>5</td>
-                  <td>6000000.00</td>
-                </tr>
-                <tr>
-                  <td><strong>Aretha Mayangi</strong></td>
-                  <td>Lenovo V130</td>
-                  <td>1400000.00</td>
-                  <td>10</td>
-                  <td>14000000.00</td>
-                </tr>
-                <tr>
-                  <td><strong>Aretha Mayangi</strong></td>
-                  <td>Asus ROG Strix GL703GS</td>
-                  <td>8000000.00</td>
-                  <td>2</td>
-                  <td>16000000.00</td>
-                </tr>
-              </tbody>
             </table>
+            <div id="output"></div>
             <div class="admin-btn">
-            <a href="filter.html"><input type="submit" value="View item" class="btn-btn-submit"></a>
-        </div>
+                <a href=""><input type="submit" value="Delete Category" class="btn-btn-submit"></a>
+                <a href=""><input type="submit" value="Edit Category" class="btn-btn-submit"></a>
+                <a href=""><input type="submit" value="Add Category" class="btn-btn-submit"></a>
+             <input type="submit" value="Get Categories" id="getText" class="btn-btn-submit">
+            </div>
         </div>
     </div>
     </div>
@@ -103,5 +53,51 @@
             <h2>Store Manager © 2018 . All Rights Reserved.</h2>
     </nav>
     <script src="../static/js/myscript.js"></script>
+    <script>
+    document.getElementById('getText').addEventListener('click', getProducts);
+        function getProducts(){
+            fetch('http://127.0.0.1:5000/api/v1/categories',{
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
+                }
+            })
+
+                .then((res) => res.json())
+                    //console.log(res.json());
+                .then((data) => {
+                    console.log(data);
+
+                    if("msg" in data){
+                        alert(data.msg)
+                    }
+                    if ("message" in data){
+                        alert(data.message)
+                    } else {
+                        let output = '<h2> </h2>';
+                        data.forEach(function (category) {
+                            output += `
+                        <table>
+                        <tbody>
+                        <tr >
+                        <td><input type="radio"></td>
+                        <td class = "category-list-group-item">${category.category_name}</td>
+
+                        </tr>
+                        </tbody>
+                        </table>
+                        `;
+                        });
+
+
+                        document.getElementById('output').innerHTML = output;
+                    }
+
+                })
+
+        }
+    </script>
 </body>
 </html>
