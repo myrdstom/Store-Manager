@@ -43,7 +43,7 @@
             <div class="admin-btn">
                 <a href=""><input type="submit" value="Delete Category" class="btn-btn-submit"></a>
                 <a href=""><input type="submit" value="Edit Category" class="btn-btn-submit"></a>
-                <a href=""><input type="submit" value="Add Category" class="btn-btn-submit"></a>
+                <a href="add-category.html"><input type="submit" value="Add Category" class="btn-btn-submit"></a>
              <input type="submit" value="Get Categories" id="getText" class="btn-btn-submit">
             </div>
         </div>
@@ -54,8 +54,8 @@
     </nav>
     <script src="../static/js/myscript.js"></script>
     <script>
-    document.getElementById('getText').addEventListener('click', getProducts);
-        function getProducts(){
+    document.getElementById('getText').addEventListener('click', getCategories);
+        function getCategories(){
             fetch('http://127.0.0.1:5000/api/v1/categories',{
                 method: 'GET',
                 headers: {
