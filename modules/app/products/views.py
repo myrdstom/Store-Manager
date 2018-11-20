@@ -31,7 +31,7 @@ class Products(Resource):
         try:
             role = get_jwt_identity()['role']
             if role != "store-owner":
-                return {'message': 'you are not authorized to view this resource'}, 409
+                return {'message': 'you are not authorized to view this resource'}, 401
             data = request.get_json()
             productname = data['product_name']
             unit_price = data['unit_price']
@@ -45,7 +45,8 @@ class Products(Resource):
                 return {'message': 'A product with that product name already exists'}, 409
             category_identity = Category.find_category_by_name(category_name)
             if category_identity:
-                product = Product(product_name = product_name, unit_price=unit_price, stock=stock, category_name=category_name)
+                product = Product(product_name = product_name, unit_price=unit_price, stock=stock,
+                                  category_name=category_name)
                 product.insert_product()
                 return {'message': 'product created', 'product_name': product_name,
                         'unit_price': unit_price, 'stock': stock}, 201
@@ -60,7 +61,7 @@ class Products(Resource):
         try:
             role = get_jwt_identity()['role']
             if role != "store-owner":
-                return {'message': 'you are not authorized to view this resource'}, 409
+                return {'message': 'you are not authorized to view this resource'}, 401
             data = request.get_json()
             productname = data['product_name']
             unit_price = data['unit_price']
@@ -89,7 +90,7 @@ class Products(Resource):
                 return {'message': 'Record successfully deleted'}, 200
             return {'message': 'Product does not exist'}, 200
         else:
-            return {'message': 'you are not authorized to view this resource'}, 409
+            return {'message': 'you are not authorized to view this resource'}, 401
 
 
 API.add_resource(Products, '/products', '/products/<int:product_id>')

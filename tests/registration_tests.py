@@ -66,7 +66,7 @@ class FlaskTestCase(BaseTestCase):
                                     data=json.dumps(dict(username="myrdstom",
                                                          password="password",
                                                          email="bgpeter@gmail.com")))
-            self.assertEqual(response2.status_code, 409)
+            self.assertEqual(response2.status_code, 401)
             responseJson = json.loads(response2.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
@@ -153,7 +153,7 @@ class FlaskTestCase(BaseTestCase):
                                                                                    self.login_user()[
                                                                                        'access_token']},
                                    data=json.dumps(dict(role="store-owner")))
-            self.assertEqual(response1.status_code, 400)
+            self.assertEqual(response1.status_code, 401)
             self.assertIn(b'you are not authorized to view this resource', response1.data)
 
     """Implement tests for the login endpoint"""

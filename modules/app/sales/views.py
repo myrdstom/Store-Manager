@@ -33,7 +33,7 @@ class Sales(Resource):
             current_user = get_jwt_identity()['username']
             role = get_jwt_identity()['role']
             if role != "shop-attendant":
-                return {'message': 'you are not authorized to view this resource'}, 409
+                return {'message': 'you are not authorized to view this resource'}, 401
             data = request.get_json()
             productname = data['product_name']
             username = current_user

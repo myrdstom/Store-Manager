@@ -21,7 +21,7 @@ class FlaskTestCase(BaseTestCase):
                                                                                    self.login_user()[
                                                                                        'access_token']},
                                    data=json.dumps(category_data))
-            self.assertEqual(response.status_code, 409)
+            self.assertEqual(response.status_code, 401)
             responseJson = json.loads(response.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
@@ -72,7 +72,7 @@ class FlaskTestCase(BaseTestCase):
 
     """PUT endpoint"""
 
-    """Test succesfully editing a category"""
+    """Test successfully editing a category"""
 
     def test_edit_category_item(self):
         with self.app.test_client() as client:
@@ -144,7 +144,7 @@ class FlaskTestCase(BaseTestCase):
                                                                                      self.login_user()[
                                                                                          'access_token']},
                                    data=json.dumps(dict(category_name="accessories")))
-            self.assertEqual(response1.status_code, 409)
+            self.assertEqual(response1.status_code, 401)
             responseJson = json.loads(response1.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
@@ -191,7 +191,7 @@ class FlaskTestCase(BaseTestCase):
                                                                                    self.login_user()[
                                                                                        'access_token']},
                                    data=json.dumps(dict(category_data)))
-            self.assertEqual(response1.status_code, 409)
+            self.assertEqual(response1.status_code, 401)
             responseJson = json.loads(response1.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
@@ -248,7 +248,7 @@ class FlaskTestCase(BaseTestCase):
                                                                                         self.login_user()[
                                                                                             'access_token']},
                                       data=json.dumps(category_data))
-            self.assertEqual(response2.status_code, 409)
+            self.assertEqual(response2.status_code, 401)
             responseJson = json.loads(response2.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 

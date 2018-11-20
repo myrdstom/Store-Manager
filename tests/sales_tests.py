@@ -154,7 +154,7 @@ class FlaskTestCase(BaseTestCase):
                                                                                self.admin_login()[
                                                                                    'access_token']},
                                     data=json.dumps(product_data))
-            self.assertEqual(response1.status_code, 409)
+            self.assertEqual(response1.status_code, 401)
             responseJson = json.loads(response1.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
@@ -236,7 +236,7 @@ class FlaskTestCase(BaseTestCase):
             self.assertIn('not enough in stock for you to purchase that amount', response_json['message'])
 
 
-    """Test limited stock"""
+    """Test invalid stock data"""
     def test_invalid_stock_data_types(self):
         with self.app.test_client() as client:
             category = client.post('/api/v1/categories', headers={'Content-Type': 'application/json',

@@ -19,13 +19,13 @@ class Categories(Resource):
                 return {'message': 'There are no values in the database'}, 200
             return category
         else:
-            return {'message': 'you are not authorized to view this resource'}, 409
+            return {'message': 'you are not authorized to view this resource'}, 401
 
     @jwt_required
     def post(self):
         role = get_jwt_identity()['role']
         if role != "store-owner":
-            return {'message': 'you are not authorized to view this resource'}, 409
+            return {'message': 'you are not authorized to view this resource'}, 401
         data = request.get_json()
         categoryname = data['category_name']
 
@@ -44,7 +44,7 @@ class Categories(Resource):
     def put(self, category_id):
         role = get_jwt_identity()['role']
         if role != "store-owner":
-            return {'message': 'you are not authorized to view this resource'}, 409
+            return {'message': 'you are not authorized to view this resource'}, 401
         data = request.get_json()
         categoryname = data['category_name']
         category_data = ValidateCategoryData(categoryname)
@@ -65,7 +65,7 @@ class Categories(Resource):
                 return {'message': 'Record successfully deleted'}, 200
             return {'message': 'Category does not exist'}, 200
         else:
-            return {'message': 'you are not authorized to view this resource'}, 409
+            return {'message': 'you are not authorized to view this resource'}, 401
 
 
 API.add_resource(Categories, '/categories', '/categories/<int:category_id>')

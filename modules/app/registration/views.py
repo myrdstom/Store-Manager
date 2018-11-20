@@ -18,7 +18,7 @@ class Registration(Resource):
     def post(self):
         role = get_jwt_identity()['role']
         if role != "store-owner":
-            return {'message': 'you are not authorized to view this resource'}, 409
+            return {'message': 'you are not authorized to view this resource'}, 401
         data = request.get_json()
         username = data['username']
         password = generate_password_hash(data['password'], method='sha256')
@@ -38,7 +38,7 @@ class Registration(Resource):
     def put(self, userId):
         current_user = get_jwt_identity()['role']
         if current_user != "store-owner":
-            return {'message': 'you are not authorized to view this resource'}, 400
+            return {'message': 'you are not authorized to view this resource'}, 401
         data = request.get_json()
         new_role = data['role']
         role = new_role.lower()

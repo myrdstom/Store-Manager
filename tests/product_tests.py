@@ -138,7 +138,7 @@ class FlaskTestCase(BaseTestCase):
                                                                                   self.login_user()[
                                                                                       'access_token']},
                                     data=json.dumps(product_data))
-            self.assertEqual(response1.status_code, 409)
+            self.assertEqual(response1.status_code, 401)
             responseJson = json.loads(response1.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
@@ -348,7 +348,7 @@ class FlaskTestCase(BaseTestCase):
                                   data=json.dumps(dict(product_name="water",
                                                        unit_price=2000,
                                                        stock=100)))
-            self.assertEqual(response.status_code, 409)
+            self.assertEqual(response.status_code, 401)
             responseJson = json.loads(response.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
@@ -506,7 +506,7 @@ class FlaskTestCase(BaseTestCase):
                                               'Authorization': 'Bearer ' +
                                                                self.login_user()[
                                                                    'access_token']})
-            self.assertEqual(response.status_code, 409)
+            self.assertEqual(response.status_code, 401)
             responseJson = json.loads(response.data.decode())
             self.assertIn('you are not authorized to view this resource', responseJson['message'])
 
