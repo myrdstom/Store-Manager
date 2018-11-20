@@ -458,6 +458,20 @@ tr:last-of-type td:last-child {
     width:16%;
 }
 
+.sale-list-group-item-1{
+    width: 24%;
+}
+.sale-list-group-item-2{
+    width: 23%;
+}
+.sale-list-group-item-3{
+    width: 22%;
+}
+.sale-list-group-item-4{
+    width:18%;
+}
+
+
 
 .list-group-item{
     width: 23%;
