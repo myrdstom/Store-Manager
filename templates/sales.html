@@ -33,65 +33,22 @@
         <table>
           <thead>
             <tr>
+              <th>Action</th>
               <th>Shop attendant</th>
-              <th>Product Sold</th>
-              <th>Price Per Unit</th>
-              <th>quantity Sold</th>
+              <th>Product Name</th>
+              <th>Quantity Sold</th>
               <th>Total Price</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><strong>Mark Lubega</strong></td>
-              <td>HP Envy</td>
-              <td>2000000.00</td>
-              <td>10</td>
-              <td>20000000.00</td>
-            </tr>
-            <tr>
-              <td><strong>Mark Lubega</strong></td>
-              <td>4GB ram chips</td>
-              <td>40000.00</td>
-              <td>5</td>
-              <td>800000.00</td>
-            </tr>
-            <tr>
-              <td><strong>Aretha Mayangi</strong></td>
-              <td>toshiba satellite s55t-c5325-4k</td>
-              <td>3800000</td>
-              <td>20</td>
-              <td>76000000.00</td>
-            </tr>
-            <tr>
-              <td><strong>Aretha Mayangi</strong></td>
-              <td>Laptop Battery</td>
-              <td>80000.00</td>
-              <td>3</td>
-              <td>240000.00</td>
-            </tr>
-            <tr>
-              <td><strong>Peter Busulwa</strong></td>
-              <td>Asus ROG Strix GL703GS</td>
-              <td>8000000.00</td>
-              <td>2</td>
-              <td>16000000.00</td>
-            </tr>
-            <tr>
-              <td><strong>Roland Bahendeka</strong></td>
-              <td>Acer Aspire R7-572-5893</td>
-              <td>1200000.00</td>
-              <td>5</td>
-              <td>6000000.00</td>
-            </tr>
-            <tr>
-              <td><strong>Aretha Mayangi</strong></td>
-              <td>Lenovo V130 </td>
-              <td>1400000.00</td>
-              <td>4</td>
-              <td>5600000.00</td>
-            </tr>
-          </tbody>
         </table>
+        <div id="output"></div>
+        <div class="admin-btn">
+
+            <input type="submit" value="Delete" class="btn-btn-submit">
+            <a href="add-sale.html"><input type="submit" value="Add" class="btn-btn-submit"></a>
+            <input type="submit" value="Get Sales" id="getText" class="btn-btn-submit">
+        </div>
         </div>
     </div>
     </div>
@@ -100,5 +57,53 @@
             <h2>Store Manager © 2018 . All Rights Reserved.</h2>
     </nav>
     <script src="../static/js/myscript.js"></script>
+    <script>
+        document.getElementById('getText').addEventListener('click', getProducts);
+        function getProducts(){
+            fetch('http://127.0.0.1:5000/api/v1/sales',{
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
+                }
+            })
+
+                .then((res) => res.json())
+                    //console.log(res.json());
+                .then((data) => {
+                    console.log(data);
+
+                    if("msg" in data){
+                        alert(data.msg)
+                    }
+                    if ("message" in data){
+                        alert(data.message)
+                    } else {
+                        let output = '<h2> </h2>';
+                        data.forEach(function (sale) {
+                            output += `
+                        <table>
+                        <tbody>
+                        <tr >
+                        <td><input type="radio"></td>
+                        <td class = "list-group-item">${sale.username}</td>
+                        <td class = "list-group-item">${sale.product_name}</td>
+                        <td class = "list-group-item">${sale.quantity}</td>
+                        <td class = "list-group-item">${sale.total}</td>
+                        </tr>
+                        </tbody>
+                        </table>
+                        `;
+                        });
+
+
+                        document.getElementById('output').innerHTML = output;
+                    }
+
+                })
+
+        }
+    </script>
 </body>
 </html>
