@@ -27,11 +27,9 @@
             &#9776;
         </span>
         <div id="main">
-
-
         <label id="report-label">Products Available</label>
         <br>
-        <input type="text" id="myInput"  placeholder="Filter inventory.">
+        <input type="text" id="myInput"  placeholder="Filter inventory." >
         <div id="table-container">
             <table>
               <thead>
@@ -47,9 +45,10 @@
         <div id="output"></div>
         <div class="admin-btn">
 
-            <input type="submit" value="Delete" class="btn-btn-submit">
-            <a href="add-item.html"><input type="submit" value="Add" class="btn-btn-submit"></a>
+            <input type="submit" value="Delete" class="btn-btn-submit" id="deleteSingleText">
             <a href="edit-item.html"><input type="submit" value="Edit" class="btn-btn-submit"></a>
+            <a href="add-item.html"><input type="submit" value="Add" class="btn-btn-submit"></a>
+            <input type="submit" value="Filter Products"id="getSingleText" class="btn-btn-submit" >
             <input type="submit" value="Get Products" id="getText" class="btn-btn-submit">
         </div>
         </div>
@@ -60,53 +59,6 @@
             <h2>Store Manager © 2018 . All Rights Reserved.</h2>
     </nav>
     <script src="../static/js/myscript.js"></script>
-    <script>
-        document.getElementById('getText').addEventListener('click', getProducts);
-        function getProducts(){
-            fetch('http://127.0.0.1:5000/api/v1/products',{
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-type': 'application/json'
-                }
-            })
-
-                .then((res) => res.json())
-                    //console.log(res.json());
-                .then((data) => {
-                    console.log(data);
-
-                    if("msg" in data){
-                        alert(data.msg)
-                    }
-                    if ("message" in data){
-                        alert(data.message)
-                    } else {
-                        let output = '<h2> </h2>';
-                        data.forEach(function (product) {
-                            output += `
-                        <table>
-                        <tbody>
-                        <tr >
-                        <td><input type="radio" class="list-group-item"></td>
-                        <td class = "prod-list-group-item-1">${product.product_name}</td>
-                        <td class = "prod-list-group-item-2">${product.unit_price}</td>
-                        <td class = "prod-list-group-item-3">${product.stock}</td>
-                        <td class = "prod-list-group-item-4">${product.category_name}</td>
-                        </tr>
-                        </tbody>
-                        </table>
-                        `;
-                        });
-
-
-                        document.getElementById('output').innerHTML = output;
-                    }
-
-                })
-
-        }
-    </script>
+    <script src="../static/js/products.js"> </script>
 </body>
 </html>

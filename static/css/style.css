@@ -363,6 +363,13 @@ tr:last-of-type td:last-child {
     width: 60%;
 }
 
+.myInput{
+    background-color: #c6c9ce;
+    margin-left: 4.5%;
+    width: 60%;
+}
+
+
 .myInput2{
     background-color: #ebeeef;
     margin-left: 4.5%;

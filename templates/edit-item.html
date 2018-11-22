@@ -19,10 +19,13 @@
         <div id="table-container">
             <div class="admin-btn">
                 <label id="report-label2">Edit Product</label>
-                <a href="owner-inventory.html"><input type="submit" value="Go Back" class="btn-btn-submit2"></a>
+                <a href="products.html"><input type="submit" value="Go Back" class="btn-btn-submit2"></a>
                 </div>
             <div class="content-container">
-              <form action="owner-inventory.html" class="form-box">
+              <form action="products.html" class="form-box" id="editproduct">
+                  <label for="uname" id="yourinput">Product ID: </label>
+                  <input type="text" id="myInput2"  placeholder="1.." required="">
+                  <br>
                   <label for="uname" id="yourinput">Product Name: </label>
                   <input type="text" id="myInput2"  placeholder="HP Envy" required="">
                   <br>
@@ -32,7 +35,7 @@
                   <label for="uname">Product Price: </label>
                   <input type="text" id="myInput2"  placeholder="2000000" required="">
                   <br>
-                  <a href="owner-inventory.html"><input type="submit" value="Save Changes" class="btn-btn-submit3"></a>
+                  <a href="products.html"><input type="submit" value="Save Changes" class="btn-btn-submit3"></a>
               </form>
             </div>
 
@@ -43,5 +46,8 @@
             <h2>Store Manager © 2018 . All Rights Reserved.</h2>
     </nav>
     <script src="../static/js/myscript.js"></script>
+    <script>
+        
+    </script>
 </body>
 </html>
