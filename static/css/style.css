@@ -376,6 +376,12 @@ tr:last-of-type td:last-child {
     width: 60%;
 }
 
+#myInput2_id{
+    background-color: #ebeeef;
+    margin-left: 4.5%;
+    width: 60%;
+}
+
 #myInput3{
     background-color: #ebeeef;
     margin-left: 4.5%;

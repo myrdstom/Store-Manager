@@ -75,7 +75,8 @@ class Products(Resource):
                 product = Product.update_product(product_name, unit_price, stock, category_name, product_id)
                 if len(product) == 0:
                     return {'message': 'no such entry found'}, 400
-                return product, 201
+                return {'message':'product edited', 'Product Name': product_name,
+                        'Unit Price': unit_price, 'Stock': stock, 'Category': category_name}, 201
             else:
                 return {'message': 'Category does not exist'}, 400
         except Exception:
