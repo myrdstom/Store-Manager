@@ -54,7 +54,7 @@ class Categories(Resource):
         category = Category.update_category(category_name, category_id)
         if len(category) == 0:
             return {'message': 'no such entry found'}, 400
-        return category, 201
+        return {'message': 'category edited', 'Category': category_name}, 201
 
 
     @jwt_required
