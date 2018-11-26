@@ -59,3 +59,9 @@ window.onclick = function(event) {
     
   }
 }
+document.getElementById('getlogout').addEventListener('click', Logout);
+function Logout() {
+
+    localStorage.removeItem("access_token");
+    window.location.href = 'index.html';
+}
