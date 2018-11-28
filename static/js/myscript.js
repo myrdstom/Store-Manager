@@ -58,7 +58,7 @@ window.onclick = function(event) {
     }
     
   }
-}
+};
 document.getElementById('getlogout').addEventListener('click', Logout);
 function Logout() {
 

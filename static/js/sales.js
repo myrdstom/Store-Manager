@@ -1,6 +1,6 @@
 document.getElementById('getText').addEventListener('click', getSales);
 document.getElementById('getSingleText').addEventListener('click', getSingleSales);
-document.getElementById("addItem").addEventListener("submit", addProduct);
+
 
 function getSingleSales(e){
     e.preventDefault();
@@ -106,33 +106,3 @@ function getSales(){
 
         }
 
-function addProduct(e) {
- e.preventDefault();
-let product_name = document.getElementById('pname').value;
-let quantity_name = document.getElementById('qname').value;
-let quantity = parseInt(quantity_name);
-
-
-fetch('http://127.0.0.1:5000/api/v1/sales', {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
-            'Accept': 'application/json, text/plain, */*',
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-            product_name: product_name,
-            quantity: quantity
-        })
-    })
- .then((res) => res.json())
- .then((data) => {
-      console.log(data);
-      if ("message" in data){
-          alert(data.message)
-      }
-
- });
-
-
-}
