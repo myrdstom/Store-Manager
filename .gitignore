@@ -1,0 +1,6 @@
+/venv
+.idea/
+*__pycache__
+.cd
+/database/data
+*.pytest_cache

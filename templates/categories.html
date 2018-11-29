@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="navbar-nav">
+            <li><a href="index.html" id="getlogout"><d1>Logout</d1></a></li>
+            <li><a href="#"><img src="../static/images/avatar.png" alt="" class="avatar-favicon"><d1>Hello Aretha</d1></a></li>
+
+        </ul>
+    </nav>
+    <div id="side-menu" class="side-nav">
+
+        <a href="categories.html" class="active"><img src="../static/images/home.png" alt="" class="favicon"> <span id="side-menu-link">Categories</span></a>
+        <br>
+        <a href="products.html"><img src="../static/images/inventory.png" alt="" class="favicon"><span id="side-menu-link4">Products</span></a>
+        <br>
+        <a href="sales.html" ><img src="../static/images/reports.png" alt="" class="favicon"><span id="side-menu-link3">Sales</span></a>
+    </div>
+    <div id="main">
+        <span class="navbartoggle opened" id="open-slide" style="font-size:30px;cursor:pointer;margin-top:-80px;position:absolute;">
+            &#9776;
+        </span>
+        <div id="main">
+        <label id="report-label">Categories</label>
+        <br>
+        <input type="text" id="myInput"  placeholder="Filter results..">
+        <div id="table-container">
+            <table>
+              <thead>
+             <tr>
+                  <th>Category ID</th>
+                  <th>Category Name</th>
+                </tr>
+              </thead>
+            </table>
+            <div id="output"></div>
+            <div class="admin-btn">
+                <a href=""><input type="submit" value="Delete Category" class="btn-btn-submit" id="deleteSingleText"></a>
+                <a href="edit-category.html"><input type="submit" value="Edit Category" class="btn-btn-submit"></a>
+                <a href="add-category.html"><input type="submit" value="Add Category" class="btn-btn-submit"></a>
+             <input type="submit" value="Get Categories" id="getText" class="btn-btn-submit">
+            </div>
+        </div>
+    </div>
+    </div>
+    <nav class="navbar-bottom">
+            <h2>Store Manager © 2018 . All Rights Reserved.</h2>
+    </nav>
+    <script src="../static/js/myscript.js"></script>
+    <script src="../static/js/category.js"></script>
+</body>
+</html>

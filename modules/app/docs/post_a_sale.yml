@@ -1,0 +1,30 @@
+Sales
+---
+tags:
+  - Sales
+parameters:
+  - in: body
+    name: body
+    required: true
+    type: string
+    description: The store-attendant can post a sale.
+
+responses:
+  201:
+    description: Product added to the inventory
+    schema:
+      id: sale_id
+      properties:
+        product_name:
+          type: string
+          default: acer
+        quantity:
+          type: integer
+          default: 20000
+  400:
+    description: You are not authorized to view this resource
+
+  409:
+    description: Duplicate question.
+
+

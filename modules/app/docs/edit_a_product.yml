@@ -1,0 +1,11 @@
+View  Products
+---
+tags:
+  - Products
+parameters:
+  - in: body
+    name: body
+    required: true
+    type: string
+    description: The admin user can edit a products.
+

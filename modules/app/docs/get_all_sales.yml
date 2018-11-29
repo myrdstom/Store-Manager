@@ -1,0 +1,27 @@
+Sales
+---
+tags:
+  - Sales
+parameters:
+  - in: body
+    name: body
+    required: true
+    type: string
+    description: Every logged in user can view a sale.
+responses:
+  200:
+    schema:
+      properties:
+        usename:
+          type: string
+        product_name:
+          type: string
+        quantity:
+          type: integer
+        total:
+          type: integer
+    description: There are no products in the database
+  401:
+    description: Missing Authorization Header
+
+
