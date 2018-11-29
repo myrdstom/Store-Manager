@@ -1,7 +1,7 @@
 document.getElementById('getText').addEventListener('click', getCategories);
 document.getElementById('deleteSingleText').addEventListener('click', deleteSingleCategory);
 function getCategories(){
-    fetch('https://store-manager-heroku.herokuapp.com/api/v1/categories',{
+    fetch('http://127.0.0.1:5000/api/v1/categories',{
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
@@ -51,7 +51,7 @@ function deleteSingleCategory(e){
         alert("Please insert an ID")
     }
 
-    fetch('https://store-manager-heroku.herokuapp.com/api/v1/categories/' + category_id,{
+    fetch('http://127.0.0.1:5000/api/v1/categories/' + category_id,{
         method: 'DELETE',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem("access_token"),

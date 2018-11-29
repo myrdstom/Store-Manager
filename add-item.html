@@ -55,7 +55,7 @@
         let unit_price = parseInt(unitPrice);
         let stock = parseInt(Stock);
 
-        fetch('https://store-manager-heroku.herokuapp.com/api/v1/products', {
+        fetch('http://127.0.0.1:5000/api/v1/products', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem("access_token"),

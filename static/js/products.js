@@ -12,7 +12,7 @@ function deleteSingleProducts(e){
         alert("Please insert an ID")
     }
 
-    fetch('https://store-manager-heroku.herokuapp.com/api/v1/products/' + product_id,{
+    fetch('http://127.0.0.1:5000/api/v1/products/' + product_id,{
         method: 'DELETE',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
@@ -48,7 +48,7 @@ function getSingleProducts(e){
         alert("Please insert an ID")
     }
 
-    fetch('https://store-manager-heroku.herokuapp.com/api/v1/products/' + product_id,{
+    fetch('http://127.0.0.1:5000/api/v1/products/' + product_id,{
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
@@ -98,7 +98,7 @@ function getSingleProducts(e){
 }
 
 function getProducts(){
-    fetch('https://store-manager-heroku.herokuapp.com/api/v1/products',{
+    fetch('http://127.0.0.1:5000/api/v1/products',{
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem("access_token"),

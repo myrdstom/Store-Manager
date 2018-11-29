@@ -10,7 +10,7 @@ function getSingleSales(e){
     if (isNaN(sale_id)){
         alert("Please insert an ID")
     }
-    fetch('https://store-manager-heroku.herokuapp.com/api/v1/sales/' + sale_id,{
+    fetch('http://127.0.0.1:5000/api/v1/sales/' + sale_id,{
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
@@ -61,7 +61,7 @@ function getSingleSales(e){
 
 }
 function getSales(){
-    fetch('https://store-manager-heroku.herokuapp.com/api/v1/sales',{
+    fetch('http://127.0.0.1:5000/api/v1/sales',{
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
