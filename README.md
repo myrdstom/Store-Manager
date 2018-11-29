@@ -44,7 +44,7 @@ To setup,
 
 ## Build
 
-1. Run the file run.py```python run.py``` in the root directory and follow  the prompts
+1. Run the file run.py``` python run.py ``` in the root directory and follow  the prompts
 
 2. Test all endpoints with [POSTMAN](https://www.getpostman.com/apps)
 
