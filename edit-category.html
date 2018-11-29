@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="static/css/style.css">
+
+</head>
+<body>
+<body>
+    <nav class="navbar">
+        <ul class="navbar-nav">
+            <li><a href="index.html" id="getlogout"><d1>Logout</d1></a></li>
+
+        </ul>
+    </nav>
+    <div id="main">
+        <div id="main">
+        <div id="table-container">
+            <div class="admin-btn">
+                <label id="report-label2">Edit Product</label>
+                <a href="categories.html"><input type="submit" value="Go Back" class="btn-btn-submit2"></a>
+                </div>
+            <div class="content-container">
+              <form action=" " class="form-box" id="editproduct">
+                  <label for="uname" id="yourinput">Product ID: </label>
+                  <input type="text" id="myInput2_id"  placeholder="1.." required="">
+                  <br>
+                  <label for="uname">Category Name: </label>
+                  <input type="text" class="myInput2"  placeholder="Category Name.." required="" id="cname">
+                  <br>
+                  <a href="categories.html"><input type="submit" value="Save Changes" class="btn-btn-submit3" id="editText"></a>
+              </form>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    <nav class="navbar-bottom">
+            <h2>Store Manager © 2018 . All Rights Reserved.</h2>
+    </nav>
+    <script src="static/js/myscript.js"></script>
+    <script>
+    document.getElementById('editText').addEventListener('click', editCategory);
+    function editCategory(e){
+        e.preventDefault();
+        let categoryid = document.getElementById('myInput2_id').value;
+        let category_name = document.getElementById('cname').value;
+        let category_id = parseInt(categoryid);
+        console.log(category_id);
+        if (isNaN(category_id)){
+            alert("Please insert an ID")
+        }
+
+        fetch('https://store-manager-heroku.herokuapp.com/api/v1/categories/' + category_id,{
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
+                'Accept': 'application/json, text/plain, */*',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                    category_name: category_name
+                })
+        })
+        .then((res) => res.json())
+        .then((data) => {
+              console.log(data);
+              if ("message" in data){
+                  alert(data.message)
+              }
+
+         });
+
+
+     }
+    </script>
+</body>
+</html>

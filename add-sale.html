@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="static/css/style.css">
+
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="navbar-nav">
+            <li><a href="index.html" id="getlogout"><d1>Logout</d1></a></li>
+
+        </ul>
+    </nav>
+    <div id="main">
+        <div id="main">
+        <div id="table-container">
+            <div class="admin-btn">
+                <label id="report-label2">Create Product</label>
+                <a href="sales.html"><input type="submit" value="Go Back" class="btn-btn-submit2"></a>
+                </div>
+            <div class="content-container">
+              <form action="sales.html" class="form-box" id="addItem">
+                  <label for="pname" id="yourinput">Product Name: </label>
+                  <input type="text" class="myInput2"  placeholder="Product Name.." required="" id="pname">
+                  <br>
+                  <label for="uname">Quantity: </label>
+                  <input type="text" class="myInput2"  placeholder="Quantity..." required="" id="qname">
+                  <br>
+                  <a href="sales.html"><input type="submit" value="Add-Sale" class="btn-btn-submit3"></a>
+              </form>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    <nav class="navbar-bottom">
+            <h2>Store Manager © 2018 . All Rights Reserved.</h2>
+    </nav>
+    <script src="static/js/myscript.js"></script>
+    <script>
+        document.getElementById("addItem").addEventListener("submit", addSale);
+        function addSale(e) {
+             e.preventDefault();
+            let product_name = document.getElementById('pname').value;
+            let quantity_name = document.getElementById('qname').value;
+            let quantity = parseInt(quantity_name);
+
+
+            fetch('https://store-manager-heroku.herokuapp.com/api/v1/sales', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem("access_token"),
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product_name: product_name,
+                        quantity: quantity
+                    })
+                })
+             .then((res) => res.json())
+             .then((data) => {
+                  console.log(data);
+                  if ("message" in data){
+                      alert(data.message)
+                  }
+
+             });
+
+
+            }
+    </script>
+
+</body>
+</html>
