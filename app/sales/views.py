@@ -1,5 +1,5 @@
-from modules.app.sales import apsn_v1
-from modules.app_utils import empty_string_catcher, is_integer, is_string, check_for_letters
+from app.sales import apsn_v1
+from app_utils import empty_string_catcher, is_integer, is_string, check_for_letters
 from flask import request
 from database.models import Sale, Product
 from flask_restful import Resource, Api

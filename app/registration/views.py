@@ -1,5 +1,5 @@
-from modules.app.registration import auth_v1
-from modules.app_utils import ValidateUserData, is_string, empty_string_catcher
+from app.registration import auth_v1
+from app_utils import ValidateUserData, is_string, empty_string_catcher
 from flask import request
 from database.models import User
 from flask_restful import Resource, Api
@@ -69,7 +69,7 @@ class Login(Resource):
             return {'message': 'Error: wrong password'}, 400
 
         access_token = create_access_token(identity=check_for_user)
-        return {'access_token': access_token}, 200
+        return {'access_token': access_token, 'username':username}, 200
 
 
 API.add_resource(Registration, '/signup', '/signup/<int:userId>')

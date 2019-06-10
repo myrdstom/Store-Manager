@@ -4,3 +4,6 @@
 .cd
 /database/data
 *.pytest_cache
+app/__init__.pyc
+.coverage
+

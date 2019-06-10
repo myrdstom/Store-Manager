@@ -38,24 +38,6 @@ class FlaskTestCase(BaseTestCase):
             responseJson = json.loads(response.data.decode())
             self.assertIn('category created', responseJson['message'])
 
-    """Test posting a duplicate category"""
-
-    def test_add_duplicate_category_item(self):
-        with self.app.test_client() as client:
-            response1 = client.post('/api/v1/categories', headers={'Content-Type': 'application/json',
-                                                                   'Authorization': 'Bearer ' +
-                                                                                    self.admin_login()[
-                                                                                        'access_token']},
-                                    data=json.dumps(category_data))
-            self.assertEqual(response1.status_code, 201)
-            response = client.post('/api/v1/categories', headers={'Content-Type': 'application/json',
-                                                                  'Authorization': 'Bearer ' +
-                                                                                   self.admin_login()[
-                                                                                       'access_token']},
-                                   data=json.dumps(category_data))
-            self.assertEqual(response.status_code, 409)
-            responseJson = json.loads(response.data.decode())
-            self.assertIn('A category with that product name already exists', responseJson['message'])
 
     """Test invalid category data"""
 

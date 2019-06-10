@@ -1,5 +1,5 @@
-from modules.app.products import apcn_v1
-from modules.app_utils import ValidateProductData
+from app.products import apcn_v1
+from app_utils import ValidateProductData
 from flask import request
 from database.models import Product, Category
 from flask_restful import Resource, Api
@@ -10,7 +10,7 @@ API = Api(apcn_v1)
 
 
 class Products(Resource):
-    @jwt_required
+    # @jwt_required
     @swag_from("../docs/get_all_products.yml")
     def get(self, product_id=0):
         """This function returns a list of all products in the inventory or a single product"""

@@ -1,4 +1,4 @@
-from modules.app import create_app
+from app import create_app
 from database.db import DBHandler
 
 app = create_app()

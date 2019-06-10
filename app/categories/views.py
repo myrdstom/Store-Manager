@@ -1,8 +1,8 @@
-from modules.app.categories import apca_v1
+from app.categories import apca_v1
 from flask import request
 from database.models import Category
 from flask_restful import Resource, Api
-from modules.app_utils import ValidateCategoryData
+from app_utils import ValidateCategoryData
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flasgger import swag_from
 

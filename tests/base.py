@@ -1,9 +1,9 @@
 import unittest
 import json
-from modules.Instance.config import TestingConfig
+from Instance.config import TestingConfig
 from database.db import DBHandler
 from flask import current_app as app
-from modules.app import create_app
+from app import create_app
 
 
 class BaseTestCase(unittest.TestCase):

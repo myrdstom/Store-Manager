@@ -7,9 +7,6 @@
 Store Manager is a web application that helps store owners manage sales and product inventory records. 
 This application is meant for use in a single store.
 
-## Pre-requisites
-The UI pages are static for now and have no functionality however they can be viewed [here](https://myrdstom.github.io/Store-Manager/)
-
 ## Setup
 
 To setup,
@@ -66,7 +63,7 @@ To setup,
 
 1. pip install nose
 
-2. Run ```nosetests --with-coverage --cover-package=modules.app``` to run all tests with coverage
+2. Run ```nosetests --with-coverage --cover-package=app``` to run all tests with coverage
 
 
 ## Deployment
