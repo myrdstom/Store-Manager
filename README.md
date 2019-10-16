@@ -24,8 +24,10 @@ To setup,
     ```
     $ cd store manager
     $ pip install virtualenv
-    $ virtualenv venv
-    $ cd venv/bin/activate    
+    $ Linux and MacOS users : virtualenv --python=python3 venv
+    $ Windows users: virtualenv venv
+    $ Linux and MacOS users: source venv/bin/activate
+    $ Windows users: cd venv/bin/activate    
     ```    
     **Note** if you are using windows activate the environment with ```venv/scripts/activate```
 5. Move to the root directory of the project
